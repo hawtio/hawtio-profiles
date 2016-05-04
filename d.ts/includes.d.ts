@@ -3,3 +3,4 @@
 /// <reference path="../libs/hawtio-kubernetes/defs.d.ts" />
 /// <reference path="../libs/hawtio-integration/defs.d.ts" />
 /// <reference path="../libs/hawtio-dashboard/defs.d.ts" />
+/// <reference path="../libs/fabric8-console/defs.d.ts" />

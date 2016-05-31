@@ -1,4 +1,4 @@
-<div ng-controller="Profiles.ContainersController" ng-show="loading == 0">
+<div ng-controller="Profiles.ContainersController">
 
   <div class="row">
     <div ng-include="'plugins/kubernetes/html/tabs.html'"></div>
@@ -6,7 +6,7 @@
 
   <button class="btn btn-primary pull-right" ng-click="refresh()">Refresh</button>
 
-  <h2>Containers</h2>
+  <h2>Containers <i ng-hide="loading == 0" class="fa fa-spinner fa-spin"></i></h2>
   <ul>
     <li ng-repeat="container in containers"><a href="{{wikiLink(profile.path)}}">{{container|json}}</a></li>
   </ul>

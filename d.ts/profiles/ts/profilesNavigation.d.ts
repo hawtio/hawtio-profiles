@@ -1,4 +1,4 @@
 /// <reference path="../../includes.d.ts" />
 declare module Profiles {
-    function initNavigation($routeProvider: any): void;
+    function createProfilesSubNavBars(namespace: string, projectId: string): any;
 }

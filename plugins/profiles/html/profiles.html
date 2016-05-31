@@ -1,0 +1,14 @@
+<div ng-controller="Profiles.ProfilesController" ng-show="loading == 0">
+
+  <div class="row">
+    <div ng-include="'plugins/kubernetes/html/tabs.html'"></div>
+  </div>
+
+  <button class="btn btn-primary pull-right" ng-click="refresh()">Refresh</button>
+
+  <h2>Profiles</h2>
+  <ul>
+    <li ng-repeat="profile in profiles"><a href="{{wikiLink(profile.path)}}">{{profile.name}}</a></li>
+  </ul>
+
+</div>

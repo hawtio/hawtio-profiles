@@ -4,8 +4,19 @@
 
 module Profiles {
 
+  interface Profile {
+    id?:string;
+    path?:string;
+    name?:string;
+    tags?:string[];
+    summary?:string;
+    iconURL?:string;
+  }
+
   module.controller("Profiles.ProfilesController", ["$scope", "$location", ($scope, $location) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
+    $scope.tags = [];
+    $scope.selectedTags = [];
 
     var wikiRepository = new Wiki.GitWikiRepository($scope);
 
@@ -27,12 +38,15 @@ module Profiles {
       function findProfiles(path) {
         $scope.loading++;
         wikiRepository.getPage($scope.branch, path, null, data => {
-          // $scope.profiles = data;
           if(data.children) {
             _.forEach(data.children, value => {
               if(value.directory && _.endsWith(value.name, ".profile")) {
-                var name = value.path.replace(/^profiles\//, "").replace(/\.profile$/, "");
-                $scope.profiles.push({name:name, path:value.path})
+                var profile = <Profile>{
+                  name: value.path.replace(/^profiles\//, "").replace(/\.profile$/, ""),
+                  path: value.path,
+                  tags: getTags(path)
+                };
+                $scope.profiles.push(profile);
               } else if (value.directory) {
                 findProfiles(value.path);
               }
@@ -42,6 +56,11 @@ module Profiles {
         });
       }
       findProfiles("profiles");
+
+      function getTags(path:string):Array<string> {
+          var tags = path.split('/');
+          return tags.slice(1, tags.length);
+      }
     };
 
     $scope.refresh();

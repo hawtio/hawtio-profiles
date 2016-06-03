@@ -15,7 +15,6 @@ module Profiles {
 
   module.controller("Profiles.ProfilesController", ["$scope", "$location", ($scope, $location) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
-    $scope.tags = [];
     $scope.selectedTags = [];
 
     var wikiRepository = new Wiki.GitWikiRepository($scope);
@@ -23,12 +22,6 @@ module Profiles {
     // We use $scope.loading to reference count loading operations so that we know when all the data
     // for this view has been fetched.
     $scope.loading = 0;
-
-    $scope.details = null;
-    function onFileDetails(details) {
-      $scope.details = details;
-      $scope.children = null;
-    }
 
     $scope.wikiLink = path => Wiki.viewLink($scope, path, $location);
 
@@ -40,11 +33,13 @@ module Profiles {
         wikiRepository.getPage($scope.branch, path, null, data => {
           if(data.children) {
             _.forEach(data.children, value => {
-              if(value.directory && _.endsWith(value.name, ".profile")) {
+              if(value.directory && _.endsWith(value.name, '.profile')) {
+                var info = /^profiles\/((?:.+)\/)*(.+).profile$/.exec(value.path);
                 var profile = <Profile>{
-                  name: value.path.replace(/^profiles\//, "").replace(/\.profile$/, ""),
+                  id: (info[1] || '') + info[2],
+                  name: info[2],
                   path: value.path,
-                  tags: getTags(path)
+                  tags: info[1] ? info[1].slice(0, -1).split('/') : []
                 };
                 $scope.profiles.push(profile);
               } else if (value.directory) {
@@ -55,12 +50,7 @@ module Profiles {
           $scope.loading--;
         });
       }
-      findProfiles("profiles");
-
-      function getTags(path:string):Array<string> {
-          var tags = path.split('/');
-          return tags.slice(1, tags.length);
-      }
+      findProfiles('profiles');
     };
 
     $scope.refresh();

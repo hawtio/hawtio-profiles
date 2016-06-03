@@ -7,8 +7,11 @@
   <button class="btn btn-primary pull-right" ng-disabled="loading != 0" ng-click="refresh()">Refresh</button>
 
   <h2>Settings <i ng-hide="loading == 0" class="fa fa-spinner fa-spin"></i></h2>
+
   <div>
-    <pre>{{profilesConfig.text}}</pre>
+    Settings for building containers from Fabric8 profiles repository
   </div>
+
+  <div hawtio-form-2="config" entity="settings"></div>
 
 </div>

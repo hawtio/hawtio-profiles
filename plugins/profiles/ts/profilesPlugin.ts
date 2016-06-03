@@ -11,7 +11,7 @@ module Profiles {
   export var log:Logging.Logger = Logger.get(pluginName);
   export var templatePath = 'plugins/' + pluginName + '/html/';
 
-  export var module = angular.module(pluginName, ['hawtio-core', 'hawtio-ui']);
+  export var module = angular.module(pluginName, ['hawtio-core', 'hawtio-ui', 'hawtio-forms']);
 
   module.config(["$routeProvider", ($routeProvider:ng.route.IRouteProvider) => {
     var join = UrlHelpers.join;

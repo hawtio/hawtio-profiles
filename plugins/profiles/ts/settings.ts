@@ -14,7 +14,7 @@ module Profiles {
 
       $scope.config = {
         style: HawtioForms.FormStyle.STANDARD,
-        mode: HawtioForms.FormMode.EDIT,
+        mode: HawtioForms.FormMode.VIEW,
         properties: {
           gitRemoteUriPattern: {
             type: 'string',
@@ -37,20 +37,42 @@ module Profiles {
 
       $scope.refresh = () => {
         $scope.loading++;
-        wikiRepository.getPage($scope.branch, "fabric8-profiles.cfg", null, data => {
+        wikiRepository.getPage($scope.branch, 'fabric8-profiles.cfg', null, data => {
           $scope.loading--;
-          $scope.settings = parse(data.text);
+          $scope.settings = data.text;
+          $scope.properties = parse(data.text);
         });
+      };
+
+      $scope.$watch('loading', value => $scope.config.mode = value > 0
+        ? HawtioForms.FormMode.VIEW
+        : HawtioForms.FormMode.EDIT);
+
+      $scope.save = () => {
+          var edit = apply($scope.properties, $scope.settings);
+          if (edit != $scope.settings) {
+              $scope.loading++;
+              // TODO: enhance putPage API to accept error callback
+              wikiRepository.putPage($scope.branch, 'fabric8-profiles.cfg', edit, 'Update profiles settings', response => {
+                  Wiki.onComplete(response);
+                  Core.notification("success", response.file + ' saved!');
+                  $scope.loading--;
+              });
+          }
       };
 
       function parse(content:string):any {
         return content.split('\n').reduce((properties, line) => {
-            var property = /^([^#=]+)=?(.*)$/.exec(line.trim());
+            var property = /^([^#=]+)=(.*)$/.exec(line.trim());
             if (property) {
               properties[property[1].trim()] = property[2].trim();
             }
             return properties;
         }, {});
+      }
+
+      function apply(properties:any, settings:string):string {
+        return settings.replace(/^([^#=]+)=(.*)$/gm, (match, key, value) => key + '=' + properties[key] || value);
       }
 
       $scope.refresh();

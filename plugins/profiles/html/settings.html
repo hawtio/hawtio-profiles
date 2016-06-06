@@ -12,6 +12,15 @@
     Settings for building containers from Fabric8 profiles repository
   </div>
 
-  <div hawtio-form-2="config" entity="settings"></div>
+  <div class="row">
+    <button class="btn btn-primary pull-right"
+            title="Saves changes to profiles settings"
+            ng-disabled="loading != 0"
+            ng-click="save()">
+        Save Changes
+    </button>
+  </div>
+
+  <div hawtio-form-2="config" entity="properties"></div>
 
 </div>

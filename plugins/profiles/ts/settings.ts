@@ -49,16 +49,23 @@ module Profiles {
         : HawtioForms.FormMode.EDIT);
 
       $scope.save = () => {
-          var edit = apply($scope.properties, $scope.settings);
-          if (edit != $scope.settings) {
-              $scope.loading++;
-              // TODO: enhance putPage API to accept error callback
-              wikiRepository.putPage($scope.branch, 'fabric8-profiles.cfg', edit, 'Update profiles settings', response => {
-                  Wiki.onComplete(response);
-                  Core.notification("success", response.file + ' saved!');
-                  $scope.loading--;
-              });
-          }
+        var edit = apply($scope.properties, $scope.settings);
+        if (edit != $scope.settings) {
+          $scope.loading++;
+          wikiRepository.putPage($scope.branch, 'fabric8-profiles.cfg', edit, 'Update profiles settings',
+            response => {
+              Wiki.onComplete(response);
+              Core.notification("success", response.file + ' saved!');
+              $scope.loading--;
+            }
+            // TODO: Add the ability to provide error callback to putPage API
+            /*,
+            response => {
+              Core.notification("error", response);
+              $scope.loading--;
+            }*/
+          );
+        }
       };
 
       function parse(content:string):any {

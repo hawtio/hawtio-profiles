@@ -1,6 +1,6 @@
 /// <reference path="../../includes.ts"/>
 /// <reference path="profilesPlugin.ts"/>
-/// <reference path="profilesNavigation.ts"/>
+/// <reference path="profilesHelpers.ts"/>
 
 module Profiles {
 
@@ -40,7 +40,7 @@ module Profiles {
         wikiRepository.getPage($scope.branch, 'fabric8-profiles.cfg', null, data => {
           $scope.loading--;
           $scope.settings = data.text;
-          $scope.properties = parse(data.text);
+          $scope.properties = parseProperties(data.text);
         });
       };
 
@@ -67,16 +67,6 @@ module Profiles {
           );
         }
       };
-
-      function parse(content:string):any {
-        return content.split('\n').reduce((properties, line) => {
-            var property = /^([^#=]+)=(.*)$/.exec(line.trim());
-            if (property) {
-              properties[property[1].trim()] = property[2].trim();
-            }
-            return properties;
-        }, {});
-      }
 
       function apply(properties:any, settings:string):string {
         return settings.replace(/^([^#=]+)=(.*)$/gm, (match, key, value) => key + '=' + properties[key] || value);

@@ -7,8 +7,46 @@
   <button class="btn btn-primary pull-right" ng-disabled="loading != 0" ng-click="refresh()">Refresh</button>
 
   <h2>Containers <i ng-hide="loading == 0" class="fa fa-spinner fa-spin"></i></h2>
-  <ul>
-    <li ng-repeat="container in containers"><a href="{{wikiLink(profile.path)}}">{{container|json}}</a></li>
-  </ul>
+
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table table-bordered table-striped" hawtio-simple-table="tableConfig"></table>
+    </div>
+  </div>
 
 </div>
+
+<script type="text/ng-template" id="containerName.html">
+  <div class="ngCellText nowrap">
+    <a href="" title="View details for {{row.entity.name}}"
+       ng-href="{{row.entity | kubernetesPageLink}}">
+      {{row.entity.name}}
+    </a>
+  </div>
+</script>
+
+<script type="text/ng-template" id="containerPods.html">
+  <div class="ngCellText nowrap">
+    <span class="badge">{{row.entity.pods}}</span>
+  </div>
+</script>
+
+<script type="text/ng-template" id="containerTypes.html">
+  <div class="ngCellText nowrap">
+    <ul class="service-list">
+      <li class="inline-block" ng-repeat="icon in row.entity.typeIcons">
+        <hawtio-icon config="icon"/>
+      </li>
+    </ul>
+  </div>
+</script>
+
+<script type="text/ng-template" id="containerProfiles.html">
+  <div class="ngCellText nowrap">
+    <ul class="service-list">
+      <li ng-repeat="profile in row.entity.profiles">
+        {{profile}}
+      </li>
+    </ul>
+  </div>
+</script>

@@ -1,5 +1,5 @@
 /// <reference path="../../includes.ts"/>
-/// <reference path="profilesNavigation.ts"/>
+/// <reference path="profilesHelpers.ts"/>
 
 /**
  * @module Profiles

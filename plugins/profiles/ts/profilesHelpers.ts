@@ -25,6 +25,16 @@ module Profiles {
     ]);
   }
 
+  export function parseProperties(content:string):any {
+    return content.split('\n').reduce((properties, line) => {
+      var property = /^([^#=]+)=(.*)$/.exec(line.trim());
+      if (property) {
+        properties[property[1].trim()] = property[2].trim();
+      }
+      return properties;
+    }, {});
+  }
+
   // FIXME: should be exported by the Developer module
   function activateCurrent(navBarItems) {
     navBarItems = _.compact(navBarItems);

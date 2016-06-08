@@ -11,10 +11,16 @@
   <div>
     <div class="row-fluid">
       <div class="col-md-8">
-        <div ng-repeat="profile in profiles | selectedTags:'tags':selectedTags">
-          <a href="{{wikiLink(profile.path)}}">{{profile.name}}</a>
-          <hawtio-tag-list tags="profile.tags" selected="selectedTags"></hawtio-tag-list>
-        </div>
+        <accordion close-others="false">
+          <accordion-group is-open="status.open" ng-repeat="profile in profiles | selectedTags:'tags':selectedTags">
+            <accordion-heading>
+              {{profile.name}}
+              <hawtio-tag-list tags="profile.tags" selected="selectedTags"></hawtio-tag-list>
+              <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+            </accordion-heading>
+            <div ng-if="status.open" ng-include="'plugins/profiles/html/profileSummary.html'" onload="loadSummary(profile)"></div>
+          </accordion-group>
+        </accordion>
       </div>
 
       <div class="col-md-4">

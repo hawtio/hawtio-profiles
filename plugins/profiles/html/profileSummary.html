@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col-md-2">
+    <i ng-hide="profile.summary" class="fa fa-spinner fa-spin"></i>
+    <div class="app-logo" ng-show="profile.summary">
+      <div ng-show="profile.iconUrl" ng-bind-html="profile.icon"></div>
+      <img src="img/fabric8_icon.svg" ng-hide="profile.iconUrl"/>
+    </div>
+  </div>
+
+  <div class="col-md-10">
+    <div ng-show="profile.summary" ng-bind-html="profile.summary"></div>
+  </div>
+</div>

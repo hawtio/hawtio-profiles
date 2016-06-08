@@ -10,10 +10,12 @@ module Profiles {
     name?:string;
     tags?:string[];
     summary?:string;
-    iconURL?:string;
+    summaryUrl?:string;
+    icon?:string;
+    iconUrl?:string;
   }
 
-  module.controller("Profiles.ProfilesController", ["$scope", "$location", ($scope, $location) => {
+  module.controller("Profiles.ProfilesController", ["$scope", "$location", "marked", "$sce", ($scope, $location, marked, $sce) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
     $scope.selectedTags = [];
 
@@ -27,30 +29,61 @@ module Profiles {
 
     $scope.refresh = () => {
       $scope.profiles = [];
+      findProfiles('profiles');
+    };
+
+    function findProfiles(path:string) {
       // we need to recursively traverse the profiles dir to look for profiles.
-      function findProfiles(path) {
-        $scope.loading++;
-        wikiRepository.getPage($scope.branch, path, null, data => {
-          if(data.children) {
-            _.forEach(data.children, value => {
-              if(value.directory && _.endsWith(value.name, '.profile')) {
-                var info = /^profiles\/((?:.+)\/)*(.+).profile$/.exec(value.path);
-                var profile = <Profile>{
-                  id: (info[1] || '') + info[2],
-                  name: info[2],
-                  path: value.path,
-                  tags: info[1] ? info[1].slice(0, -1).split('/') : []
-                };
-                $scope.profiles.push(profile);
-              } else if (value.directory) {
-                findProfiles(value.path);
-              }
-            });
+      $scope.loading++;
+      wikiRepository.getPage($scope.branch, path, null, data => {
+        if(data.children) {
+          _.forEach(data.children, value => {
+            if(value.directory && _.endsWith(value.name, '.profile')) {
+              $scope.profiles.push(loadProfile(value));
+              $scope.profiles = _.sortBy($scope.profiles, 'name');
+            } else if (value.directory) {
+              findProfiles(value.path);
+            }
+          });
+        }
+        $scope.loading--;
+      });
+    }
+
+    function loadProfile(value:any):Profile {
+      var info = /^profiles\/((?:.+)\/)*(.+).profile$/.exec(value.path);
+      var profile = <Profile>{
+        id: (info[1] || '') + info[2],
+        name: info[2],
+        path: value.path,
+        tags: info[1] ? info[1].slice(0, -1).split('/') : []
+      };
+
+      wikiRepository.getPage($scope.branch, value.path, null, data => {
+        for (let child of data.children) {
+          let name = child.name.toUpperCase();
+          if (name == 'README.MD' || name == 'SUMMARY.MD') {
+            profile.summaryUrl = child.path;
+          } else if (name == 'ICON.SVG') {
+            profile.iconUrl = child.path;
           }
-          $scope.loading--;
+        }
+      });
+
+      return profile;
+    }
+
+    $scope.loadSummary = function (profile:Profile):void {
+      if (profile.iconUrl) {
+        wikiRepository.getPage($scope.branch, profile.iconUrl, null, data => {
+          profile.icon = $sce.trustAsHtml(data.text.replace(/(width|height)="[^"]+"/g, ''));
         });
       }
-      findProfiles('profiles');
+      if (profile.summaryUrl) {
+        wikiRepository.getPage($scope.branch, profile.summaryUrl, null, data => profile.summary = marked(data.text));
+      } else {
+        profile.summary = '<em>no summary</em>';
+      }
     };
 
     $scope.refresh();

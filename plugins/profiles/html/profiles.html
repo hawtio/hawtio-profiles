@@ -14,9 +14,9 @@
         <accordion close-others="false">
           <accordion-group is-open="status.open" ng-repeat="profile in profiles | selectedTags:'tags':selectedTags">
             <accordion-heading>
+              <i class="pull-left glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
               {{profile.name}}
-              <hawtio-tag-list tags="profile.tags" selected="selectedTags"></hawtio-tag-list>
-              <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+              <hawtio-tag-list class="pull-right" tags="profile.tags" selected="selectedTags"></hawtio-tag-list>
             </accordion-heading>
             <div ng-if="status.open" ng-include="'plugins/profiles/html/profileSummary.html'" onload="loadSummary(profile)"></div>
           </accordion-group>

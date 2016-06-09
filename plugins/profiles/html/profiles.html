@@ -16,7 +16,8 @@
             <accordion-heading>
               <i class="pull-left glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
               {{profile.name}}
-              <hawtio-tag-list class="pull-right" tags="profile.tags" selected="selectedTags"></hawtio-tag-list>
+              <!--See https://github.com/angular-ui/bootstrap/issues/3299 -->
+              <hawtio-tag-list ng-click="$event.stopPropagation();$event.preventDefault();" class="pull-right" tags="profile.tags" selected="selectedTags"></hawtio-tag-list>
             </accordion-heading>
             <div ng-if="status.open" ng-include="'plugins/profiles/html/profileSummary.html'" onload="loadSummary(profile)"></div>
           </accordion-group>

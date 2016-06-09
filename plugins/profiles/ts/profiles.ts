@@ -15,8 +15,13 @@ module Profiles {
     iconUrl?:string;
   }
 
-  module.controller("Profiles.ProfilesController", ["$scope", "$location", "marked", "$sce", ($scope, $location, marked, $sce) => {
+  module.service("ProfileCart", () => {
+    return [];
+  });
+
+  module.controller("Profiles.ProfilesController", ["$scope", "$location", "marked", "$sce", "ProfileCart", ($scope, $location, marked, $sce, profileCart) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
+    $scope.profileCart = profileCart;
     $scope.selectedTags = [];
 
     var wikiRepository = new Wiki.GitWikiRepository($scope);
@@ -24,6 +29,8 @@ module Profiles {
     // We use $scope.loading to reference count loading operations so that we know when all the data
     // for this view has been fetched.
     $scope.loading = 0;
+
+    SelectionHelpers.decorate($scope);
 
     $scope.wikiLink = path => Wiki.viewLink($scope, path, $location);
 

@@ -30,7 +30,32 @@
       <div class="col-md-4">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h3 class="panel-title">Tags</h3>
+            <h3 class="panel-title"><i class="fa fa-cart-arrow-down"></i> Selection</h3>
+          </div>
+          <div class="panel-body">
+            <div ng-hide="profileCart.length > 0">
+              <em class="text-muted">Select profiles...</em>
+            </div>
+            <ul style="padding: 0">
+              <li class="inline-block" ng-repeat="profile in profileCart">
+                <button type="button" class="btn btn-success btn-xs"
+                        ng-click="toggleSelectionFromGroup(profileCart, profile)">
+                  {{profile.name}} <i class="glyphicon glyphicon-remove" aria-hidden="true"></i>
+                </button><span ng-if="!$last">+</span>
+              </li>
+            </ul>
+            <button class="btn btn-primary pull-right"
+                    ng-disabled="!profileCart.length"
+                    ng-click="addProfilesToContainer()"
+                    title="Assign the selected profiles to existing containers">
+              <i class="fa fa-cloud-upload"></i> Assign
+            </button>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-tags"></i> Tags</h3>
           </div>
           <div class="panel-body">
             <hawtio-tag-filter tags="tags"

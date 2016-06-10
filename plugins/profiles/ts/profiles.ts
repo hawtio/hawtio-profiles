@@ -46,8 +46,7 @@ module Profiles {
         if(data.children) {
           _.forEach(data.children, value => {
             if(value.directory && _.endsWith(value.name, '.profile')) {
-              $scope.profiles.push(loadProfile(value));
-              $scope.profiles = _.sortBy($scope.profiles, 'name');
+              loadProfile(value);
             } else if (value.directory) {
               findProfiles(value.path);
             }
@@ -57,7 +56,7 @@ module Profiles {
       });
     }
 
-    function loadProfile(value:any):Profile {
+    function loadProfile(value:any):void {
       var info = /^profiles\/((?:.+)\/)*(.+).profile$/.exec(value.path);
       var profile = <Profile>{
         id: (info[1] || '') + info[2],
@@ -75,9 +74,9 @@ module Profiles {
             profile.iconUrl = child.path;
           }
         }
+        $scope.profiles.push(profile);
+        $scope.profiles = _.sortBy($scope.profiles, 'name');
       });
-
-      return profile;
     }
 
     $scope.loadSummary = function (profile:Profile):void {

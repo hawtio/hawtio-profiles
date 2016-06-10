@@ -15,9 +15,7 @@ module Profiles {
     iconUrl?:string;
   }
 
-  module.service("ProfileCart", () => {
-    return [];
-  });
+  module.service("ProfileCart", () => <Profile>[]);
 
   module.controller("Profiles.ProfilesController", ["$scope", "$location", "marked", "$sce", "ProfileCart", ($scope, $location, marked, $sce, profileCart) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
@@ -77,9 +75,24 @@ module Profiles {
         }
         $scope.profiles.push(profile);
         $scope.profiles = _.sortBy($scope.profiles, 'name');
+
+        // Update the profiles selection in case it contains this profile
+        let i = _.findIndex($scope.profileCart, {id: profile.id});
+        if (i >= 0) {
+          $scope.profileCart[i] = profile;
+        }
+
         $scope.loading--;
       });
     }
+
+    $scope.$watch('loading', (value, old) => {
+      // If loading is over...
+      if (old > 0 && value == 0) {
+        // let's replace the new profiles into the cart and remove the non-existing ones
+        $scope.profileCart = _.compact($scope.profileCart.map(profile => _.find($scope.profiles, {id: profile.id})));
+      }
+    });
 
     $scope.loadSummary = function (profile:Profile):void {
       if (profile.iconUrl) {

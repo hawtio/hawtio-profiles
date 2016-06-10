@@ -65,6 +65,7 @@ module Profiles {
         tags: info[1] ? info[1].slice(0, -1).split('/') : []
       };
 
+      $scope.loading++;
       wikiRepository.getPage($scope.branch, value.path, null, data => {
         for (let child of data.children) {
           let name = child.name.toUpperCase();
@@ -76,6 +77,7 @@ module Profiles {
         }
         $scope.profiles.push(profile);
         $scope.profiles = _.sortBy($scope.profiles, 'name');
+        $scope.loading--;
       });
     }
 

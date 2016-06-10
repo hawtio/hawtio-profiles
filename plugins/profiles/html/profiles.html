@@ -4,7 +4,9 @@
     <div ng-include="'plugins/kubernetes/html/tabs.html'"></div>
   </div>
 
-  <button class="btn btn-primary pull-right" ng-disabled="loading != 0" ng-click="refresh()">Refresh</button>
+  <button class="btn btn-primary pull-right" ng-disabled="loading != 0" ng-click="refresh()">
+    <i class="fa fa-refresh" ng-class="{'fa-spin': loading != 0}"></i> Refresh
+  </button>
 
   <h2>Profiles <i ng-hide="loading == 0" class="fa fa-spinner fa-spin"></i></h2>
 

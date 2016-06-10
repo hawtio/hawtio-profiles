@@ -41,7 +41,7 @@
                 <button type="button" class="btn btn-success btn-xs"
                         ng-click="toggleSelectionFromGroup(profileCart, profile)">
                   {{profile.name}} <i class="glyphicon glyphicon-remove" aria-hidden="true"></i>
-                </button><span ng-if="!$last">+</span>
+                </button><small><i ng-if="!$last" class="fa fa-plus text-success"></i></small>
               </li>
             </ul>
             <button class="btn btn-primary pull-right"

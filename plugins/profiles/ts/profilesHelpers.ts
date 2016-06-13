@@ -15,7 +15,8 @@ module Profiles {
       {
         href: UrlHelpers.join(HawtioCore.documentBase(), "/workspaces", namespace, "projects", projectId, "profiles", "containers"),
         label: "Containers",
-        title: "Containers"
+        title: "Containers",
+        isActive: (item, path) => _.startsWith(path, item.href)
       },
       {
         href: UrlHelpers.join(HawtioCore.documentBase(), "/workspaces", namespace, "projects", projectId, "profiles", "settings"),

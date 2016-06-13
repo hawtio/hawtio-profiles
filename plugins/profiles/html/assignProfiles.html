@@ -1,0 +1,33 @@
+<div ng-controller="Profiles.AssignProfilesController">
+
+  <div class="row">
+    <div ng-include="'plugins/kubernetes/html/tabs.html'"></div>
+  </div>
+
+  <h2>Assign profiles to containers</h2>
+
+  <div class="row">
+    <div>
+      <ul style="padding: 0">
+        Select the containers to assign the
+        <li class="inline-block" ng-repeat="profile in profileCart">
+          <button type="button" class="btn btn-success btn-xs"
+                  ng-click="toggleSelectionFromGroup(profileCart, profile)">
+            {{profile.name}} <i class="glyphicon glyphicon-remove" aria-hidden="true"></i>
+          </button><span ng-if="$index < profileCart.length - 2">,&nbsp;</span><span ng-if="$index === profileCart.length - 2"> and&nbsp;</span>
+        </li>
+        <ng-pluralize count="profileCart.length" when="{'one': 'profile', 'other': 'profiles'}"></ng-pluralize> to:
+      </ul>
+    </div>
+    <div class="pull-right">
+      <button class="btn btn-primary" ng-disabled="selected.length == 0" ng-click="assignProfiles()">Assign</button>
+    </div>
+  </div>
+
+  <h2>Containers <i ng-show="loading.status()" class="fa fa-spinner fa-spin"></i></h2>
+
+  <div class="row">
+    <div ng-include="'plugins/profiles/html/containerList.html'"></div>
+  </div>
+
+</div>

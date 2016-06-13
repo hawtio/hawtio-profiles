@@ -33,9 +33,11 @@ module Profiles {
       }]
     });
 
-    $routeProvider.when(base, route('profiles.html', false));
-    $routeProvider.when(join(base, 'containers'), route('containers.html', false));
-    $routeProvider.when(join(base, 'settings'), route('settings.html', false));
+    $routeProvider
+        .when(base, route('profiles.html', false))
+        .when(join(base, 'containers', 'assignProfiles'), route('assignProfiles.html', false))
+        .when(join(base, 'containers'), route('containers.html', false))
+        .when(join(base, 'settings'), route('settings.html', false));
   }]);
 
   hawtioPluginLoader.addModule(pluginName);

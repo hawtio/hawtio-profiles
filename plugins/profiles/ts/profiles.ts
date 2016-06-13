@@ -4,7 +4,7 @@
 
 module Profiles {
 
-  interface Profile {
+  export interface Profile {
     id?:string;
     path?:string;
     name?:string;
@@ -105,6 +105,10 @@ module Profiles {
       } else {
         profile.summary = '<em>no summary</em>';
       }
+    };
+
+    $scope.assignProfiles = function ():void {
+      $location.path(UrlHelpers.join('/workspaces', $scope.namespace, 'projects', $scope.projectId, 'profiles', 'containers', 'assignProfiles'));
     };
 
     $scope.refresh();

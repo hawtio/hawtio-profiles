@@ -90,7 +90,7 @@ module Profiles {
       // If loading is over...
       if (old > 0 && value == 0) {
         // let's replace the new profiles into the cart and remove the non-existing ones
-        $scope.profileCart = _.compact($scope.profileCart.map(profile => _.find($scope.profiles, {id: profile.id})));
+        SelectionHelpers.syncGroupSelection($scope.profileCart, $scope.profiles, 'id');
       }
     });
 

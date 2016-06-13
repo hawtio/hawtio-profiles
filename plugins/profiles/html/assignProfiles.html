@@ -7,7 +7,7 @@
   <h2>Assign profiles to containers</h2>
 
   <div class="row">
-    <div>
+    <div ng-show="profileCart.length > 0">
       <ul style="padding: 0">
         Select the containers to assign the
         <li class="inline-block" ng-repeat="profile in profileCart">
@@ -19,8 +19,11 @@
         <ng-pluralize count="profileCart.length" when="{'one': 'profile', 'other': 'profiles'}"></ng-pluralize> to:
       </ul>
     </div>
+    <div ng-hide="profileCart.length > 0" class="text-muted">
+      No profiles selected. Please go to the profiles tab and select some profiles.
+    </div>
     <div class="pull-right">
-      <button class="btn btn-primary" ng-disabled="selected.length == 0" ng-click="assignProfiles()">Assign</button>
+      <button class="btn btn-primary" ng-disabled="profileCart.length == 0" ng-click="assignProfiles()">Assign</button>
     </div>
   </div>
 

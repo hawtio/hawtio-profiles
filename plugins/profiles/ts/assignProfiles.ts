@@ -4,7 +4,7 @@
 
 module Profiles {
 
-  module.controller("Profiles.AssignProfilesController", ["$scope", "$location", "$templateCache", "ProfileCart", ($scope, $location, $templateCache, profileCart:Profile[]) => {
+  module.controller("Profiles.AssignProfilesController", ["$scope", "$location", "$templateCache", "profiles", ($scope, $location, $templateCache, profiles) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
 
     // We use $scope.loading to reference count loading operations so that we know
@@ -13,7 +13,7 @@ module Profiles {
 
     SelectionHelpers.decorate($scope);
 
-    $scope.profileCart = profileCart;
+    $scope.profileCart = profiles.profileCart;
 
   }])
 }

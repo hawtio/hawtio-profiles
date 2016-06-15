@@ -7,7 +7,7 @@ module Profiles {
   export interface Container {
     name:string;
     pods?: number;
-    profiles:string[];
+    profiles:Profile|string[];
     types: string[];
     typeIcons?: Icon[]
   }
@@ -18,14 +18,12 @@ module Profiles {
     src: string;
   }
 
-  module.controller("Profiles.ContainerListController", ["$scope", "$location", "$templateCache", ($scope, $location, $templateCache) => {
+  module.controller("Profiles.ContainerListController", ["$scope", "$location", "$templateCache", "profiles", ($scope, $location, $templateCache, profiles) => {
     if (!$scope.loading) {
       $scope.loading = {count: 0, status: function () {return this.count > 0}};
     }
 
-    var wikiRepository = new Wiki.GitWikiRepository($scope);
-
-    $scope.wikiLink = path => Wiki.viewLink($scope, path, $location);
+    $scope.viewProfile = profile => $location.path(Wiki.viewLink($scope, profile.path, $location));
 
     $scope.tableConfig = {
       data: 'containers',
@@ -61,6 +59,8 @@ module Profiles {
       jenkinsfile: 'jenkins'
     };
 
+    var wikiRepository = new Wiki.GitWikiRepository($scope);
+
     $scope.refresh = () => {
       // Lets list all the containers, and load the container configs
       $scope.loading.count++;
@@ -74,7 +74,7 @@ module Profiles {
               let container = <Container> {
                 name: data.name.replace(/.cfg$/, ''),
                 pods: 0, // TODO
-                profiles: properties['profiles'].split(' '),
+                profiles: _.map(properties['profiles'].split(' '), profile => _.find(profiles.profiles, {id: profile}) || profile),
                 types: properties['container-type'].split(' '),
                 typeIcons: properties['container-type'].split(' ').map(type => <Icon> {
                   title: type,

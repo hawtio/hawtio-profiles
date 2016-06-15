@@ -5,7 +5,7 @@ declare module Profiles {
     interface Container {
         name: string;
         pods?: number;
-        profiles: string[];
+        profiles: Profile | string[];
         types: string[];
         typeIcons?: Icon[];
     }

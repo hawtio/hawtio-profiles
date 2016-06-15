@@ -11,7 +11,7 @@
 <script type="text/ng-template" id="containerName.html">
   <div class="ngCellText nowrap">
     <a href="" title="View details for {{row.entity.name}}"
-       ng-href="{{row.entity | kubernetesPageLink}}">
+       ng-href="{{row.entity.name}}">
       {{row.entity.name}}
     </a>
   </div>
@@ -36,8 +36,9 @@
 <script type="text/ng-template" id="containerProfiles.html">
   <div class="ngCellText nowrap">
     <ul class="service-list">
-      <li ng-repeat="profile in row.entity.profiles">
-        {{profile}}
+      <li class="inline-block" ng-repeat="profile in row.entity.profiles">
+        <button ng-if="profile.id" class="btn btn-success btn-sm" ng-click="$parent.$parent.$parent.$parent.viewProfile(profile)"><i class="fa fa-files-o"></i> {{profile.name}}</button>
+        <span ng-if="!profile.id" class="label label-default"><i class="fa fa-chain-broken"></i> {{profile}}</span>
       </li>
     </ul>
   </div>

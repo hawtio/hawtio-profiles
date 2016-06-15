@@ -23,11 +23,11 @@
       No profiles selected. Please go to the profiles tab and select some profiles.
     </div>
     <div class="pull-right">
-      <button class="btn btn-primary" ng-disabled="profileCart.length == 0" ng-click="assignProfiles()">Assign</button>
+      <button class="btn btn-primary" ng-disabled="profileCart.length == 0 || loading()" ng-click="assignProfiles()">Assign</button>
     </div>
   </div>
 
-  <h2>Containers <i ng-show="loading.status()" class="fa fa-spinner fa-spin"></i></h2>
+  <h2>Containers <i ng-show="loading()" class="fa fa-spinner fa-spin"></i></h2>
 
   <div class="row">
     <div ng-include="'plugins/profiles/html/containerList.html'"></div>

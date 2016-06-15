@@ -4,16 +4,17 @@
 
 module Profiles {
 
-  module.controller("Profiles.AssignProfilesController", ["$scope", "$location", "$templateCache", "profiles", ($scope, $location, $templateCache, profiles) => {
+  module.controller('Profiles.AssignProfilesController', ['$scope', '$location', '$templateCache', 'profiles', 'containers', ($scope, $location, $templateCache, profiles, containers:Containers) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
-
-    // We use $scope.loading to reference count loading operations so that we know
-    // when all the data for this view has been fetched.
-    $scope.loading = {count: 0, status: function () {return this.count > 0}};
+    $scope.profileCart = profiles.profileCart;
 
     SelectionHelpers.decorate($scope);
 
-    $scope.profileCart = profiles.profileCart;
+    $scope.loading = () => containers.loading;
+    $scope.refresh = () => containers.load(new Wiki.GitWikiRepository($scope), $scope.branch);
 
+    if (!(containers.loaded || containers.loading)) {
+      $scope.refresh();
+    }
   }])
 }

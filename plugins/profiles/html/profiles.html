@@ -23,8 +23,8 @@
               <!--See https://github.com/angular-ui/bootstrap/issues/3299 -->
                 <hawtio-tag-list tags="profile.tags" selected="selectedTags"
                                  ng-click="$event.stopPropagation();$event.preventDefault();"></hawtio-tag-list>
-                <input type="checkbox" ng-checked="isInGroup(profileCart, profile)"
-                       ng-click="toggleSelectionFromGroup(profileCart, profile);$event.stopPropagation();">
+                <input type="checkbox" ng-checked="isInGroup(selection, profile)"
+                       ng-click="toggleSelectionFromGroup(selection, profile);$event.stopPropagation();">
               </div>
               <div class="ellipsis">
                 {{profile.id}}
@@ -41,19 +41,19 @@
             <h3 class="panel-title"><i class="fa fa-cart-arrow-down"></i> Selection</h3>
           </div>
           <div class="panel-body">
-            <div ng-hide="profileCart.length > 0">
+            <div ng-hide="selection.length > 0">
               <em class="text-muted">Select profiles...</em>
             </div>
             <ul style="padding: 0">
-              <li class="inline-block" ng-repeat="profile in profileCart">
+              <li class="inline-block" ng-repeat="profile in selection">
                 <button type="button" class="btn btn-success btn-xs"
-                        ng-click="toggleSelectionFromGroup(profileCart, profile)">
+                        ng-click="toggleSelectionFromGroup(selection, profile)">
                   {{profile.name}} <i class="glyphicon glyphicon-remove" aria-hidden="true"></i>
                 </button><small><i ng-if="!$last" class="fa fa-plus text-success"></i></small>
               </li>
             </ul>
             <button class="btn btn-primary pull-right"
-                    ng-disabled="!profileCart.length"
+                    ng-disabled="!selection.length"
                     ng-click="assignProfiles()"
                     title="Assign the selected profiles to existing containers">
               <i class="fa fa-cloud-upload"></i> Assign

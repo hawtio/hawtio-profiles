@@ -10,7 +10,7 @@ declare module Profiles {
     interface Container {
         name: string;
         pods?: number;
-        profiles: Profile | string[];
+        profiles: (Profile | string)[];
         types: string[];
         typeIcons?: Icon[];
     }
@@ -21,7 +21,7 @@ declare module Profiles {
         data: Container[];
         cart: Container[];
         private profiles;
-        constructor(profiles: any);
+        constructor(profiles: Profiles);
         load: (wiki: Wiki.GitWikiRepository, branch: string) => void;
         private complete;
     }

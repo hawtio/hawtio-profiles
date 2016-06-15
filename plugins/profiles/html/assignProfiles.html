@@ -7,23 +7,23 @@
   <h2>Assign profiles to containers</h2>
 
   <div class="row">
-    <div ng-show="profileCart.length > 0">
+    <div ng-show="profiles.length > 0">
       <ul style="padding: 0">
         Select the containers to assign the
-        <li class="inline-block" ng-repeat="profile in profileCart">
+        <li class="inline-block" ng-repeat="profile in profiles">
           <button type="button" class="btn btn-success btn-xs"
-                  ng-click="toggleSelectionFromGroup(profileCart, profile)">
+                  ng-click="toggleSelectionFromGroup(profiles, profile)">
             {{profile.name}} <i class="glyphicon glyphicon-remove" aria-hidden="true"></i>
-          </button><span ng-if="$index < profileCart.length - 2">,&nbsp;</span><span ng-if="$index === profileCart.length - 2"> and&nbsp;</span>
+          </button><span ng-if="$index < profiles.length - 2">,&nbsp;</span><span ng-if="$index === profiles.length - 2"> and&nbsp;</span>
         </li>
-        <ng-pluralize count="profileCart.length" when="{'one': 'profile', 'other': 'profiles'}"></ng-pluralize> to:
+        <ng-pluralize count="profiles.length" when="{'one': 'profile', 'other': 'profiles'}"></ng-pluralize> to:
       </ul>
     </div>
-    <div ng-hide="profileCart.length > 0" class="text-muted">
+    <div ng-hide="profiles.length > 0" class="text-muted">
       No profiles selected. Please go to the profiles tab and select some profiles.
     </div>
     <div class="pull-right">
-      <button class="btn btn-primary" ng-disabled="profileCart.length == 0 || loading()" ng-click="assignProfiles()">Assign</button>
+      <button class="btn btn-primary" ng-disabled="profiles.length == 0 || loading()" ng-click="assignProfiles()">Assign</button>
     </div>
   </div>
 

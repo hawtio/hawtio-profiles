@@ -5,31 +5,31 @@
 module Profiles {
 
   export interface Profile {
-    id?:string;
-    path?:string;
-    name?:string;
-    tags?:string[];
-    summary?:string;
-    summaryUrl?:string;
-    icon?:string;
-    iconUrl?:string;
+    id: string;
+    path: string;
+    name: string;
+    tags?: string[];
+    summary?: string;
+    summaryUrl?: string;
+    icon?: string;
+    iconUrl?: string;
   }
 
-  module.service("profiles", function () {
-    this.loaded = false;
-    this.loading = false;
-    this.requests = 0;
-    this.profiles = <Profile>[];
-    this.profileCart = <Profile>[];
+  export class Profiles {
+    loaded:boolean = false;
+    loading:boolean = false;
+    private requests:number = 0;
+    data:Profile[] = [];
+    cart:Profile[] = [];
 
-    this.loadProfiles = (wiki:Wiki.GitWikiRepository, branch:string, path:string) => {
-      this.profiles.length = 0;
-      this.requests = 0;
+    load = (wiki:Wiki.GitWikiRepository, branch:string, path:string):void => {
       this.loading = true;
+      this.data.length = 0;
+      this.requests = 0;
       this.findProfiles(wiki, branch, path);
     };
 
-    this.findProfiles = (wiki:Wiki.GitWikiRepository, branch:string, path:string) => {
+    private findProfiles = (wiki:Wiki.GitWikiRepository, branch:string, path:string):void => {
       this.requests++;
       // we need to recursively traverse the profiles dir to look for profiles
       wiki.getPage(branch, path, null, data => {
@@ -42,11 +42,11 @@ module Profiles {
             }
           });
         }
-        this.completeRequest();
+        this.complete();
       });
     };
 
-    this.loadProfile = (wiki:Wiki.GitWikiRepository, branch:string, value:any):void => {
+    private loadProfile = (wiki:Wiki.GitWikiRepository, branch:string, value:any):void => {
       var info = /^profiles\/((?:.+)\/)*(.+).profile$/.exec(value.path);
       var profile = <Profile>{
         id: (info[1] ? info[1].replace(/\//g, '-') : '') + info[2],
@@ -66,32 +66,34 @@ module Profiles {
           }
         }
 
-        this.profiles.splice(_.sortedIndex(this.profiles, profile, 'name'), 0, profile);
+        this.data.splice(_.sortedIndex(this.data, profile, 'name'), 0, profile);
 
         // Update the profiles selection in case it contains this profile
-        let i = _.findIndex(this.profileCart, {id: profile.id});
+        let i = _.findIndex(this.cart, {id: profile.id});
         if (i >= 0) {
-          this.profileCart[i] = profile;
+          this.cart[i] = profile;
         }
 
-        this.completeRequest();
+        this.complete();
       });
     };
 
-    this.completeRequest = function () {
+    private complete = ():void => {
       if (--this.requests === 0) {
-        SelectionHelpers.syncGroupSelection(this.profileCart, this.profiles, 'id');
+        SelectionHelpers.syncGroupSelection(this.cart, this.data, 'id');
         this.loading = false;
         this.loaded = true;
       }
     };
-  });
+  }
 
-  module.controller("Profiles.ProfilesController", ["$scope", "$location", "marked", "$sce", "profiles", ($scope, $location, marked, $sce, profiles) => {
+  module.service('profiles', Profiles);
+
+  module.controller('Profiles.ProfilesController', ['$scope', '$location', 'marked', '$sce', 'profiles', ($scope, $location, marked, $sce, profiles:Profiles) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
 
-    $scope.profiles = profiles.profiles;
-    $scope.profileCart = profiles.profileCart;
+    $scope.profiles = profiles.data;
+    $scope.selection = profiles.cart;
     $scope.selectedTags = [];
 
     SelectionHelpers.decorate($scope);
@@ -100,16 +102,16 @@ module Profiles {
 
     $scope.wikiLink = path => Wiki.viewLink($scope, path, $location);
 
-    var wikiRepository = new Wiki.GitWikiRepository($scope);
+    let wiki = new Wiki.GitWikiRepository($scope);
 
     $scope.loadSummary = function (profile:Profile):void {
       if (profile.iconUrl) {
-        wikiRepository.getPage($scope.branch, profile.iconUrl, null, data => {
+        wiki.getPage($scope.branch, profile.iconUrl, null, data => {
           profile.icon = $sce.trustAsHtml(data.text.replace(/(width|height)="[^"]+"/g, ''));
         });
       }
       if (profile.summaryUrl) {
-        wikiRepository.getPage($scope.branch, profile.summaryUrl, null, data => profile.summary = marked(data.text));
+        wiki.getPage($scope.branch, profile.summaryUrl, null, data => profile.summary = marked(data.text));
       } else {
         profile.summary = '<em>no summary</em>';
       }
@@ -117,7 +119,7 @@ module Profiles {
 
     $scope.assignProfiles = () => $location.path(UrlHelpers.join('/workspaces', $scope.namespace, 'projects', $scope.projectId, 'profiles', 'containers', 'assignProfiles'));
 
-    $scope.refresh = () => profiles.loadProfiles(wikiRepository, $scope.branch, 'profiles');
+    $scope.refresh = () => profiles.load(wiki, $scope.branch, 'profiles');
 
     if (!(profiles.loaded || profiles.loading)) {
       $scope.refresh();

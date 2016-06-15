@@ -18,7 +18,7 @@ module Profiles {
   export interface Container {
     name: string;
     pods?: number;
-    profiles: Profile|string[];
+    profiles: (Profile|string)[];
     types: string[];
     typeIcons?: Icon[];
   }
@@ -29,10 +29,9 @@ module Profiles {
     private requests: number = 0;
     data: Container[] = [];
     cart: Container[] = [];
-    // TODO: declare profiles as a class
-    private profiles: any;
+    private profiles: Profiles;
 
-    constructor(profiles:any) {
+    constructor(profiles:Profiles) {
       this.profiles = profiles;
     }
 
@@ -51,7 +50,7 @@ module Profiles {
                 name: data.name.replace(/.cfg$/, ''),
                 pods: 0, // TODO
                 // TODO: load the profiles if not already loaded and sync the containers data
-                profiles: _.map(properties['profiles'].split(' '), profile => _.find(this.profiles.profiles, {id: profile}) || profile),
+                profiles: _.map(properties['profiles'].split(' '), (profile:string) => <Profile | string>_.find(this.profiles.data, {id: profile}) || profile),
                 types: properties['container-type'].split(' '),
                 typeIcons: properties['container-type'].split(' ').map(type => <Icon> {
                   title: type,

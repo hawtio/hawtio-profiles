@@ -49,7 +49,7 @@ module Profiles {
     this.loadProfile = (wiki:Wiki.GitWikiRepository, branch:string, value:any):void => {
       var info = /^profiles\/((?:.+)\/)*(.+).profile$/.exec(value.path);
       var profile = <Profile>{
-        id: (info[1] || '') + info[2],
+        id: (info[1] ? info[1].replace(/\//g, '-') : '') + info[2],
         name: info[2],
         path: value.path,
         tags: info[1] ? info[1].slice(0, -1).split('/') : []

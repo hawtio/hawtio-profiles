@@ -30,6 +30,7 @@ module Profiles {
       let complete = () => {
         if (--saving === 0) {
           containers.load(wiki, $scope.branch);
+          $location.path(UrlHelpers.join('/workspaces', $scope.namespace, 'projects', $scope.projectId, 'profiles', 'containers'));
         }
       };
       for (let container of containers.cart) {

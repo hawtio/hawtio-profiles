@@ -23,7 +23,7 @@
       No profiles selected. Please go to the profiles tab and select some profiles.
     </div>
     <div class="pull-right">
-      <button class="btn btn-primary" ng-disabled="profiles.length == 0 || containers.length == 0 || loading()" ng-click="assignProfiles()">Assign</button>
+      <button class="btn btn-primary" ng-disabled="profiles.length == 0 || containers.length == 0 || loading() || saving()" ng-click="assignProfiles()"><i class="fa fa-cloud-upload"></i> Assign</button>
     </div>
   </div>
 

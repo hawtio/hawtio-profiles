@@ -17,6 +17,8 @@ module Profiles {
 
   export interface Container {
     name: string;
+    path: string;
+    text?: string;
     pods?: number;
     profiles: (Profile|string)[];
     types: string[];
@@ -48,6 +50,8 @@ module Profiles {
               let properties = parseProperties(page.text);
               let container = <Container> {
                 name: page.name.replace(/.cfg$/, ''),
+                path: page.path,
+                text: page.text,
                 pods: 0, // TODO
                 // TODO: load the profiles if not already loaded and sync the containers data
                 profiles: _.map(properties['profiles'].split(' '), (profile:string) => <Profile | string>_.find(this.profiles.data, {id: profile}) || profile),

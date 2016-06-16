@@ -9,6 +9,8 @@ declare module Profiles {
     }
     interface Container {
         name: string;
+        path: string;
+        text?: string;
         pods?: number;
         profiles: (Profile | string)[];
         types: string[];

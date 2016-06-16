@@ -37,17 +37,17 @@ module Profiles {
 
     load = (wiki:Wiki.GitWikiRepository, branch:string):void => {
       this.loading = true;
-      this.data.length = 0;
       this.requests++;
+      let data:Container[] = [];
       // Lets list all the containers, and load the container configs
-      wiki.getPage(branch, 'configs/containers', null, data => {
-        _.forEach(data.children, value => {
-          if (!value.directory && _.endsWith(value.name, '.cfg')) {
+      wiki.getPage(branch, 'configs/containers', null, page => {
+        _.forEach(page.children, child => {
+          if (!child.directory && _.endsWith(child.name, '.cfg')) {
             this.requests++;
-            wiki.getPage(branch, value.path, null, data => {
-              let properties = parseProperties(data.text);
+            wiki.getPage(branch, child.path, null, page => {
+              let properties = parseProperties(page.text);
               let container = <Container> {
-                name: data.name.replace(/.cfg$/, ''),
+                name: page.name.replace(/.cfg$/, ''),
                 pods: 0, // TODO
                 // TODO: load the profiles if not already loaded and sync the containers data
                 profiles: _.map(properties['profiles'].split(' '), (profile:string) => <Profile | string>_.find(this.profiles.data, {id: profile}) || profile),
@@ -58,17 +58,19 @@ module Profiles {
                   src: 'img/icons/' + (type.toLowerCase() in icons ? icons[type.toLowerCase()] : 'java') + '.svg'
                 })
               };
-              this.data.push(container);
-              this.complete();
+              data.push(container);
+              this.complete(data);
             });
           }
         });
-        this.complete();
+        this.complete(data);
       });
     };
 
-    private complete = () => {
+    private complete = (data:Container[]):void => {
       if (--this.requests === 0) {
+        this.data.length = 0;
+        this.data.push(... data);
         this.loading = false;
         this.loaded = true;
       }

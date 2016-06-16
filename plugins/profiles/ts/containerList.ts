@@ -15,7 +15,7 @@ module Profiles {
       showSelectionCheckbox: true,
       enableRowClickSelection: true,
       multiSelect: true,
-      selectedItems: [],
+      selectedItems: containers.cart,
       filterOptions: {
         filterText: $location.search()['q'] || ''
       },

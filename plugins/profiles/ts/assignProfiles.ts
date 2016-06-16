@@ -7,6 +7,7 @@ module Profiles {
   module.controller('Profiles.AssignProfilesController', ['$scope', '$location', '$templateCache', 'profiles', 'containers', ($scope, $location, $templateCache, profiles:Profiles, containers:Containers) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
     $scope.profiles = profiles.cart;
+    $scope.containers = containers.cart;
 
     SelectionHelpers.decorate($scope);
 

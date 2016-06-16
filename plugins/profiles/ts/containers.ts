@@ -85,7 +85,7 @@ module Profiles {
 
   module.controller('Profiles.ContainersController', ['$scope', 'containers', ($scope, containers:Containers) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
-
+    $scope.containers = containers.data;
     $scope.loading = () => containers.loading;
     $scope.refresh = () => containers.load(new Wiki.GitWikiRepository($scope), $scope.branch);
 

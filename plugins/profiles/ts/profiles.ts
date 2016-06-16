@@ -66,7 +66,7 @@ module Profiles {
           }
         }
 
-        this.data.splice(_.sortedIndex(this.data, profile, 'name'), 0, profile);
+        this.data.splice(_.sortedIndex(this.data, profile, 'id'), 0, profile);
 
         // Update the profiles selection in case it contains this profile
         let i = _.findIndex(this.cart, {id: profile.id});

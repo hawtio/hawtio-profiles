@@ -12,10 +12,10 @@ module Profiles {
 
     $scope.tableConfig = {
       data: 'containers',
-      showSelectionCheckbox: true,
-      enableRowClickSelection: true,
+      showSelectionCheckbox: $scope.selectable || false,
+      enableRowClickSelection: $scope.selectable || false,
       multiSelect: true,
-      selectedItems: containers.cart,
+      selectedItems: $scope.selectable ? containers.cart : [],
       filterOptions: {
         filterText: $location.search()['q'] || ''
       },

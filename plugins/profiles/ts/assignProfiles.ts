@@ -8,7 +8,9 @@ module Profiles {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
     $scope.profiles = profiles.cart;
     $scope.containers = containers.cart;
+    $scope.selectable = true;
     $scope.loading = () => containers.loading;
+
     let saving:number = 0;
     $scope.saving = () => saving > 0;
 

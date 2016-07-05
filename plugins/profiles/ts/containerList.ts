@@ -7,7 +7,7 @@ module Profiles {
   module.controller('Profiles.ContainerListController', ['$scope', '$location', '$templateCache', 'profiles', 'containers', ($scope, $location, $templateCache, profiles:Profiles, containers:Containers) => {
 
     $scope.viewProfile = profile => $location.path(Wiki.viewLink($scope, profile.path, $location));
-
+    $scope.profiles = profiles;
     $scope.containers = containers.data;
 
     $scope.tableConfig = {
@@ -26,15 +26,15 @@ module Profiles {
         },
         { field: 'pods',
           displayName: 'Pods',
-          cellTemplate: $templateCache.get("containerPods.html")
+          cellTemplate: $templateCache.get('containerPods.html')
         },
         { field: 'types',
           displayName: 'Types',
-          cellTemplate: $templateCache.get("containerTypes.html")
+          cellTemplate: $templateCache.get('containerTypes.html')
         },
         { field: 'profiles',
           displayName: 'Profiles',
-          cellTemplate: $templateCache.get("containerProfiles.html")
+          cellTemplate: $templateCache.get('containerProfiles.html')
         }
       ]
     };

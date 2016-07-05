@@ -36,7 +36,11 @@
     <ul class="service-list">
       <li class="inline-block" ng-repeat="profile in row.entity.profiles">
         <button ng-if="profile.id" class="btn btn-success btn-sm" ng-click="$parent.$parent.$parent.$parent.viewProfile(profile);$event.stopPropagation();"><i class="fa fa-files-o"></i> {{profile.id}}</button>
-        <span ng-if="!profile.id" class="label label-default"><i class="fa fa-chain-broken"></i> {{profile}}</span>
+        <span ng-if="!profile.id" class="label label-default">
+          <i ng-if="$parent.$parent.$parent.$parent.profiles.loading" class="fa fa-spinner fa-spin"></i>
+          <i ng-if="$parent.$parent.$parent.$parent.profiles.loaded" class="fa fa-chain-broken"></i>
+          {{profile}}
+        </span>
       </li>
     </ul>
   </div>

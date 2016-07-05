@@ -53,7 +53,7 @@ module Profiles {
                 path: page.path,
                 text: page.text,
                 pods: 0, // TODO
-                // TODO: load the profiles if not already loaded and sync the containers data
+                // we could load the profiles if not already loaded and sync the containers data if needed
                 profiles: _.map(properties['profiles'].split(' '), (profile:string) => <Profile | string>_.find(this.profiles.data, {id: profile}) || profile),
                 types: properties['container-type'].split(' '),
                 typeIcons: properties['container-type'].split(' ').map(type => <Icon> {
@@ -83,11 +83,22 @@ module Profiles {
 
   module.service('containers', ['profiles', Containers]);
 
-  module.controller('Profiles.ContainersController', ['$scope', 'containers', ($scope, containers:Containers) => {
+  module.controller('Profiles.ContainersController', ['$scope', 'containers', 'profiles', ($scope, containers:Containers, profiles:Profiles) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
     $scope.containers = containers.data;
+    $scope.profiles = profiles.data;
     $scope.loading = () => containers.loading;
     $scope.refresh = () => containers.load(new Wiki.GitWikiRepository($scope), $scope.branch);
+
+    $scope.$watchCollection('profiles', profiles =>
+      $scope.containers.forEach((container:Container) =>
+        profiles.forEach((profile:Profile) => {
+          let i = _.indexOf(container.profiles, profile.id);
+          if (i >= 0) {
+            container.profiles[i] = profile;
+          }
+        }))
+      );
 
     if (!(containers.loaded || containers.loading)) {
       $scope.refresh();

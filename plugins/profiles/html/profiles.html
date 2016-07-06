@@ -14,10 +14,10 @@
     <div class="row-fluid">
       <div class="col-md-8">
         <accordion close-others="false">
-          <accordion-group is-open="status.open" ng-repeat="profile in profiles | selectedTags:'tags':selectedTags">
+          <accordion-group is-open="profile.open" ng-repeat="profile in profiles | selectedTags:'tags':selectedTags">
             <accordion-heading>
               <div class="pull-left">
-                <i class="glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                <i class="glyphicon" ng-class="{'glyphicon-chevron-down': profile.open, 'glyphicon-chevron-right': !profile.open}"></i>
               </div>
               <div class="pull-right">
               <!--See https://github.com/angular-ui/bootstrap/issues/3299 -->
@@ -30,7 +30,7 @@
                 {{profile.id}}
               </div>
             </accordion-heading>
-            <div ng-if="status.open" ng-include="'plugins/profiles/html/profileSummary.html'" onload="loadSummary(profile)"></div>
+            <div ng-if="profile.open" ng-include="'plugins/profiles/html/profileSummary.html'" onload="loadSummary(profile)"></div>
           </accordion-group>
         </accordion>
       </div>

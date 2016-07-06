@@ -13,6 +13,7 @@ module Profiles {
     summaryUrl?: string;
     icon?: string;
     iconUrl?: string;
+    open?: boolean;
   }
 
   export class Profiles {

@@ -11,6 +11,7 @@ declare module Profiles {
         summaryUrl?: string;
         icon?: string;
         iconUrl?: string;
+        open?: boolean;
     }
     class Profiles {
         loaded: boolean;

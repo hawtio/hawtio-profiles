@@ -11,9 +11,12 @@ module Profiles {
   export var log:Logging.Logger = Logger.get(pluginName);
   export var templatePath = 'plugins/' + pluginName + '/html/';
 
-  export var module = angular.module(pluginName, ['hawtio-core', 'hawtio-ui', 'hawtio-forms']);
+  export var module = angular.module(pluginName, ['hawtio-core', 'hawtio-ui', 'hawtio-forms', 'blockUI']);
 
-  module.config(['$routeProvider', ($routeProvider:ng.route.IRouteProvider) => {
+  module.config(['$routeProvider', 'blockUIConfig', ($routeProvider:ng.route.IRouteProvider, blockUIConfig) => {
+    blockUIConfig.autoBlock = false;
+    blockUIConfig.delay = 0;
+
     var join = UrlHelpers.join;
     var route = Developer.createTabRoutingFunction(templatePath);
     var base = '/workspaces/:namespace/projects/:projectId/profiles';

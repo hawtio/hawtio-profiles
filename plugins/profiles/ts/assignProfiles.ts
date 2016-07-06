@@ -4,7 +4,7 @@
 
 module Profiles {
 
-  module.controller('Profiles.AssignProfilesController', ['$scope', '$location', '$templateCache', 'profiles', 'containers', ($scope, $location, $templateCache, profiles:Profiles, containers:Containers) => {
+  module.controller('Profiles.AssignProfilesController', ['$scope', '$location', '$templateCache', 'profiles', 'containers', 'blockUI', ($scope, $location, $templateCache, profiles:Profiles, containers:Containers, blockUI) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
     $scope.profiles = profiles.cart;
     $scope.containers = containers.cart;
@@ -15,6 +15,8 @@ module Profiles {
     $scope.saving = () => saving > 0;
 
     SelectionHelpers.decorate($scope);
+
+    let blockTable = blockUI.instances.get('blockTable');
 
     $scope.assignProfiles = () => {
       let wiki = new Wiki.GitWikiRepository($scope);
@@ -29,10 +31,13 @@ module Profiles {
       };
       let complete = () => {
         if (--saving === 0) {
+          blockTable.message('Refreshing ...');
           containers.load(wiki, $scope.branch);
+          blockTable.stop();
           $location.path(UrlHelpers.join('/workspaces', $scope.namespace, 'projects', $scope.projectId, 'profiles', 'containers'));
         }
       };
+      blockTable.start("Saving ...");
       for (let container of containers.cart) {
         saving++;
         // TODO: Add the ability to provide error callback to putPage API

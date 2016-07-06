@@ -29,7 +29,7 @@
 
   <h2>Containers <i ng-show="loading()" class="fa fa-spinner fa-spin"></i> <span class="badge" ng-show="containers.length > 0">{{containers.length}}</span></h2>
 
-  <div class="row">
+  <div class="row" block-ui="blockTable">
     <div ng-include="'plugins/profiles/html/containerList.html'"></div>
   </div>
 

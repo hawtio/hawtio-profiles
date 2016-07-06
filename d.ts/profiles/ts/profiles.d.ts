@@ -18,6 +18,7 @@ declare module Profiles {
         private requests;
         data: Profile[];
         cart: Profile[];
+        tags: string[];
         load: (wiki: Wiki.GitWikiRepository, branch: string, path: string) => void;
         private findProfiles;
         private loadProfile;

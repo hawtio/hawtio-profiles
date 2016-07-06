@@ -21,6 +21,7 @@ module Profiles {
     private requests:number = 0;
     data:Profile[] = [];
     cart:Profile[] = [];
+    tags:string[] = [];
 
     load = (wiki:Wiki.GitWikiRepository, branch:string, path:string):void => {
       this.loading = true;
@@ -94,7 +95,7 @@ module Profiles {
 
     $scope.profiles = profiles.data;
     $scope.selection = profiles.cart;
-    $scope.selectedTags = [];
+    $scope.selectedTags = profiles.tags;
 
     SelectionHelpers.decorate($scope);
 

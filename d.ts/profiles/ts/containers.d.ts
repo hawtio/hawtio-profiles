@@ -2,6 +2,7 @@
 /// <reference path="profilesPlugin.d.ts" />
 /// <reference path="profilesHelpers.d.ts" />
 declare module Profiles {
+    import KubernetesModelService = Kubernetes.KubernetesModelService;
     interface Icon {
         title: string;
         type: string;
@@ -23,7 +24,8 @@ declare module Profiles {
         data: Container[];
         cart: Container[];
         private profiles;
-        constructor(profiles: Profiles);
+        private kubernetes;
+        constructor(profiles: Profiles, kubernetes: KubernetesModelService);
         load: (wiki: Wiki.GitWikiRepository, branch: string) => void;
         private complete;
     }

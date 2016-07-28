@@ -22,11 +22,11 @@ module Profiles {
       let wiki = new Wiki.GitWikiRepository($scope);
       let success = response => {
         Wiki.onComplete(response);
-        Core.notification("success", response.file + ' saved!');
+        Core.notification('success', response.file + ' saved!');
         complete();
       };
       let failure = response => {
-        Core.notification("error", response);
+        Core.notification('error', response);
         complete();
       };
       let complete = () => {

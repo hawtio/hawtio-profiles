@@ -17,7 +17,7 @@
 
 <script type="text/ng-template" id="containerPods.html">
   <div class="ngCellText nowrap">
-    <span class="badge">{{row.entity.pods}}</span>
+    <span class="badge" ng-class="{'badge-success': row.entity.pods > 0}">{{row.entity.pods}}</span>
   </div>
 </script>
 

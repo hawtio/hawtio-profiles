@@ -4,7 +4,7 @@
 
 module Profiles {
 
-  module.controller("Profiles.SettingsController", ["$scope", "$location", ($scope, $location) => {
+  module.controller('Profiles.SettingsController', ['$scope', ($scope) => {
       $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
       var wikiRepository = new Wiki.GitWikiRepository($scope);
   
@@ -55,13 +55,13 @@ module Profiles {
           wikiRepository.putPage($scope.branch, 'fabric8-profiles.cfg', edit, 'Update profiles settings',
             response => {
               Wiki.onComplete(response);
-              Core.notification("success", response.file + ' saved!');
+              Core.notification('success', response.file + ' saved!');
               $scope.loading--;
             }
             // TODO: Add the ability to provide error callback to putPage API
             /*,
             response => {
-              Core.notification("error", response);
+              Core.notification('error', response);
               $scope.loading--;
             }*/
           );

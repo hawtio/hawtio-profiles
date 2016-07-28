@@ -4,6 +4,8 @@
 
 module Profiles {
 
+  import KubernetesModelService = Kubernetes.KubernetesModelService;
+
   export interface Icon {
     title: string;
     type: string;
@@ -26,15 +28,17 @@ module Profiles {
   }
 
   export class Containers {
-    loaded: boolean = false;
-    loading: boolean = false;
+    loaded:boolean = false;
+    loading:boolean = false;
     private requests: number = 0;
-    data: Container[] = [];
-    cart: Container[] = [];
-    private profiles: Profiles;
+    data:Container[] = [];
+    cart:Container[] = [];
+    private profiles:Profiles;
+    private kubernetes:KubernetesModelService;
 
-    constructor(profiles:Profiles) {
+    constructor(profiles:Profiles, kubernetes:KubernetesModelService) {
       this.profiles = profiles;
+      this.kubernetes = kubernetes;
     }
 
     load = (wiki:Wiki.GitWikiRepository, branch:string):void => {
@@ -48,11 +52,13 @@ module Profiles {
             this.requests++;
             wiki.getPage(branch, child.path, null, page => {
               let properties = parseProperties(page.text);
+              // TODO: better mapping and namespace support
+              let rc = this.kubernetes.getReplicationController('default', page.name.replace(/.cfg$/, ''));
               let container = <Container> {
                 name: page.name.replace(/.cfg$/, ''),
                 path: page.path,
                 text: page.text,
-                pods: 0, // TODO
+                pods: rc ? rc.$podCount : 0,
                 // we could load the profiles if not already loaded and sync the containers data if needed
                 profiles: _.map(properties['profiles'].split(' '), (profile:string) => <Profile | string>_.find(this.profiles.data, {id: profile}) || profile),
                 types: properties['container-type'].split(' '),
@@ -81,9 +87,11 @@ module Profiles {
     };
   }
 
-  module.service('containers', ['profiles', Containers]);
+  module.service('containers', ['profiles', 'KubernetesModel', Containers]);
 
-  module.controller('Profiles.ContainersController', ['$scope', 'containers', 'profiles', ($scope, containers:Containers, profiles:Profiles) => {
+  module.controller('Profiles.ContainersController',
+      ['$scope', 'containers', 'profiles', 'KubernetesModel',
+        ($scope, containers:Containers, profiles:Profiles, kubernetes:KubernetesModelService) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
     $scope.containers = containers.data;
     $scope.profiles = profiles.data;
@@ -97,8 +105,14 @@ module Profiles {
           if (i >= 0) {
             container.profiles[i] = profile;
           }
-        }))
-      );
+        })
+      )
+    );
+
+    $scope.$on('kubernetesModelUpdated', () => $scope.containers.forEach((container:Container) => {
+      let rc = kubernetes.getReplicationController('default', container.name);
+      container.pods = rc ? rc.$podCount : 0;
+    }));
 
     if (!(containers.loaded || containers.loading)) {
       $scope.refresh();

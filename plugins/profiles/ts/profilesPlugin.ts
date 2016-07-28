@@ -44,7 +44,7 @@ module Profiles {
   }]);
 
   // Directive that avoids rendering glitches when using ng-include and bypasses its complexity
-  //as we use gulp-angular-templatecache to register AngularJS templates in the $templateCache.
+  // as we use gulp-angular-templatecache to register AngularJS templates in the $templateCache.
   module.directive('templateCacheInclude', ['$compile', '$templateCache', ($compile, $templateCache) => {
     return {
       restrict: 'A',

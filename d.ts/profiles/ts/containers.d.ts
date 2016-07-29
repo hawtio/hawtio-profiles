@@ -15,7 +15,7 @@ declare module Profiles {
         pods?: any[];
         profiles: (Profile | string)[];
         types: string[];
-        typeIcons?: Icon[];
+        icons?: Icon[];
     }
     class Containers {
         loaded: boolean;

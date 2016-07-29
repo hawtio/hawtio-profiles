@@ -8,23 +8,24 @@ module Profiles {
 
   export interface Icon {
     title: string;
-    type: string;
-    src: string;
+    type:  string;
+    src:   string;
   }
 
   let icons = {
-    karaf: 'karaf',
-    jenkinsfile: 'jenkins'
+    camel:       'camel',
+    jenkinsfile: 'jenkins',
+    karaf:       'karaf'
   };
 
   export interface Container {
-    name: string;
-    path: string;
-    text?: string;
-    pods?: any[];
+    name:     string;
+    path:     string;
+    text?:    string;
+    pods?:    any[];
     profiles: (Profile|string)[];
-    types: string[];
-    typeIcons?: Icon[];
+    types:    string[];
+    icons?:   Icon[];
   }
 
   export class Containers {
@@ -59,15 +60,29 @@ module Profiles {
                 path: page.path,
                 text: page.text,
                 pods: rc ? rc.$pods : [],
-                // we could load the profiles if not already loaded and sync the containers data if needed
+                // We could load the profiles if not already loaded and sync the containers data if needed
                 profiles: _.map(properties['profiles'].split(' '), (profile:string) => <Profile | string>_.find(this.profiles.data, {id: profile}) || profile),
                 types: properties['container-type'].split(' '),
-                typeIcons: properties['container-type'].split(' ').map(type => <Icon> {
+                icons: properties['container-type'].split(' ').map(type => <Icon> {
                   title: type,
                   type: 'img',
                   src: 'img/icons/' + (type.toLowerCase() in icons ? icons[type.toLowerCase()] : 'java') + '.svg'
                 })
               };
+              // Override the icons with runtime container info
+              if (rc) {
+                let type = rc.metadata.labels.container.toLocaleLowerCase();
+                container.icons = [
+                <Icon> {
+                  title: type,
+                  type: 'img',
+                  src: 'img/icons/' + (type in icons ? icons[type] : 'java') + '.svg'
+                },
+                <Icon> {
+                  type: 'img',
+                  src: rc.$iconUrl
+                }];
+              }
               data.push(container);
               this.complete(data);
             });

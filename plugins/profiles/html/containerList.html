@@ -22,7 +22,7 @@
       <li ng-repeat="pod in row.entity.pods">
         <i ng-class="pod.$statusCss"></i>
         <a href="" title="View details for {{pod.metadata.name}}"
-           ng-href="{{pod.metadata.name}}">
+           ng-href="{{pod | kubernetesPageLink}}">
           {{pod.metadata.name}}
         </a>
         <span ng-show="pod.$jolokiaUrl && pod.$ready" ng-controller="Kubernetes.ConnectController">

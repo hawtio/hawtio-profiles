@@ -104,6 +104,8 @@ module Profiles {
 
   module.service('containers', ['profiles', 'KubernetesModel', Containers]);
 
+  module.filter('kubernetesPageLink', () => Kubernetes.entityPageLink);
+
   module.controller('Profiles.ContainersController',
       ['$scope', 'containers', 'profiles', 'KubernetesModel',
         ($scope, containers:Containers, profiles:Profiles, kubernetes:KubernetesModelService) => {

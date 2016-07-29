@@ -12,7 +12,7 @@ declare module Profiles {
         name: string;
         path: string;
         text?: string;
-        pods?: any[];
+        rc?: any;
         profiles: (Profile | string)[];
         types: string[];
         icons?: Icon[];

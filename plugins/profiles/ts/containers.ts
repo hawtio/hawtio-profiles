@@ -22,7 +22,7 @@ module Profiles {
     name:     string;
     path:     string;
     text?:    string;
-    pods?:    any[];
+    rc?:      any;
     profiles: (Profile|string)[];
     types:    string[];
     icons?:   Icon[];
@@ -53,13 +53,12 @@ module Profiles {
             this.requests++;
             wiki.getPage(branch, child.path, null, page => {
               let properties = parseProperties(page.text);
-              // TODO: better mapping and namespace support
-              let rc = this.kubernetes.getReplicationController('default', page.name.replace(/.cfg$/, ''));
               let container = <Container> {
                 name: page.name.replace(/.cfg$/, ''),
                 path: page.path,
                 text: page.text,
-                pods: rc ? rc.$pods : [],
+                // TODO: better mapping and namespace support
+                rc: this.kubernetes.getReplicationController('default', page.name.replace(/.cfg$/, '')),
                 // We could load the profiles if not already loaded and sync the containers data if needed
                 profiles: _.map(properties['profiles'].split(' '), (profile:string) => <Profile | string>_.find(this.profiles.data, {id: profile}) || profile),
                 types: properties['container-type'].split(' '),
@@ -70,8 +69,8 @@ module Profiles {
                 })
               };
               // Override the icons with runtime container info
-              if (rc) {
-                let type = rc.metadata.labels.container.toLocaleLowerCase();
+              if (container.rc) {
+                let type = container.rc.metadata.labels.container.toLocaleLowerCase();
                 container.icons = [
                 <Icon> {
                   title: type,
@@ -80,7 +79,7 @@ module Profiles {
                 },
                 <Icon> {
                   type: 'img',
-                  src: rc.$iconUrl
+                  src: container.rc.$iconUrl
                 }];
               }
               data.push(container);
@@ -126,10 +125,9 @@ module Profiles {
       )
     );
 
-    $scope.$on('kubernetesModelUpdated', () => $scope.containers.forEach((container:Container) => {
-      let rc = kubernetes.getReplicationController('default', container.name);
-      container.pods = rc ? rc.$pods : [];
-    }));
+    $scope.$on('kubernetesModelUpdated', () =>_.filter($scope.containers, (container:Container) => !container.rc)
+      .forEach((container:Container) =>
+        container.rc = kubernetes.getReplicationController('default', container.name)));
 
     if (!(containers.loaded || containers.loading)) {
       $scope.refresh();

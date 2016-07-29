@@ -19,7 +19,7 @@
   <div class="ngCellText nowrap">
     <i ng-if="row.entity.pods.length === 0" class="fa fa-power-off"></i>
     <ul class="plain-list">
-      <li ng-repeat="pod in row.entity.pods">
+      <li ng-repeat="pod in row.entity.rc.$pods">
         <i ng-class="pod.$statusCss"></i>
         <a href="" title="View details for {{pod.metadata.name}}"
            ng-href="{{pod | kubernetesPageLink}}">

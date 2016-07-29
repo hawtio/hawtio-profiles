@@ -8,10 +8,11 @@
 
 <script type="text/ng-template" id="containerName.html">
   <div class="ngCellText nowrap">
-    <a href="" title="View details for {{row.entity.name}}"
-       ng-href="{{row.entity.name}}">
+    <a ng-if="row.entity.rc" href="" title="View details for {{row.entity.name}}"
+       ng-href="{{row.entity.rc | kubernetesPageLink}}">
       {{row.entity.name}}
     </a>
+    <span ng-if="!row.entity.rc">{{row.entity.name}}</span>
   </div>
 </script>
 

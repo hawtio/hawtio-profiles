@@ -17,13 +17,37 @@
 
 <script type="text/ng-template" id="containerPods.html">
   <div class="ngCellText nowrap">
-    <span class="badge" ng-class="{'badge-success': row.entity.pods > 0}">{{row.entity.pods}}</span>
+    <i ng-if="row.entity.pods.length === 0" class="fa fa-power-off"></i>
+    <ul class="plain-list">
+      <li ng-repeat="pod in row.entity.pods">
+        <i ng-class="pod.$statusCss"></i>
+        <a href="" title="View details for {{pod.metadata.name}}"
+           ng-href="{{pod.metadata.name}}">
+          {{pod.metadata.name}}
+        </a>
+        <span ng-show="pod.$jolokiaUrl && pod.$ready" ng-controller="Kubernetes.ConnectController">
+          <a class="clickable"
+             ng-click="doConnect(pod)"
+             title="Open a new window and connect to this container">
+            <i class="fa fa-sign-in"></i>
+          </a>
+        </span>
+        <span ng-show="pod.status.phase === 'Running'" ng-controller="Kubernetes.TermController">
+          <span ng-repeat="container in pod.spec.containers" ng-show="canConnectTo(container)">
+            <i class="fa fa-television clickable" title="Open up a terminal to {{container.name}}" ng-click="openTerminal(pod.metadata.selfLink, container.name)"></i>
+          </span>
+        </span>
+        <span ng-show="pod.status.phase === 'Running'" ng-controller="Kubernetes.PodLogLinkController">
+          <i class="fa fa-file-text" title="Open up the logs for {{pod.metadata.name}}" ng-click="openLogs(pod)"></i>
+        </span>
+      </li>
+    </ul>
   </div>
 </script>
 
 <script type="text/ng-template" id="containerTypes.html">
   <div class="ngCellText nowrap">
-    <ul class="service-list">
+    <ul class="plain-list">
       <li class="inline-block" ng-repeat="icon in row.entity.typeIcons">
         <hawtio-icon config="icon"/>
       </li>
@@ -33,7 +57,7 @@
 
 <script type="text/ng-template" id="containerProfiles.html">
   <div class="ngCellText nowrap">
-    <ul class="service-list">
+    <ul class="plain-list">
       <li class="inline-block" ng-repeat="profile in row.entity.profiles">
         <button ng-if="profile.id" class="btn btn-success btn-sm" ng-click="$parent.$parent.$parent.$parent.viewProfile(profile);$event.stopPropagation();"><i class="fa fa-files-o"></i> {{profile.id}}</button>
         <span ng-if="!profile.id" class="label label-default">

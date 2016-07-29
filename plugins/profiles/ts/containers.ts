@@ -21,7 +21,7 @@ module Profiles {
     name: string;
     path: string;
     text?: string;
-    pods?: number;
+    pods?: any[];
     profiles: (Profile|string)[];
     types: string[];
     typeIcons?: Icon[];
@@ -58,7 +58,7 @@ module Profiles {
                 name: page.name.replace(/.cfg$/, ''),
                 path: page.path,
                 text: page.text,
-                pods: rc ? rc.$podCount : 0,
+                pods: rc ? rc.$pods : [],
                 // we could load the profiles if not already loaded and sync the containers data if needed
                 profiles: _.map(properties['profiles'].split(' '), (profile:string) => <Profile | string>_.find(this.profiles.data, {id: profile}) || profile),
                 types: properties['container-type'].split(' '),
@@ -111,7 +111,7 @@ module Profiles {
 
     $scope.$on('kubernetesModelUpdated', () => $scope.containers.forEach((container:Container) => {
       let rc = kubernetes.getReplicationController('default', container.name);
-      container.pods = rc ? rc.$podCount : 0;
+      container.pods = rc ? rc.$pods : [];
     }));
 
     if (!(containers.loaded || containers.loading)) {

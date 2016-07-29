@@ -106,7 +106,7 @@ module Profiles {
 
     let wiki = new Wiki.GitWikiRepository($scope);
 
-    $scope.loadSummary = function (profile:Profile):void {
+    $scope.loadSummary = (profile:Profile) => {
       if (profile.iconUrl) {
         wiki.getPage($scope.branch, profile.iconUrl, null, data => {
           profile.icon = $sce.trustAsHtml(data.text.replace(/(width|height)="[^"]+"/g, ''));

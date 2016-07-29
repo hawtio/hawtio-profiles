@@ -26,7 +26,7 @@ declare module Profiles {
         private profiles;
         private kubernetes;
         constructor(profiles: Profiles, kubernetes: KubernetesModelService);
-        load: (wiki: Wiki.GitWikiRepository, branch: string) => void;
+        load: (wiki: Wiki.GitWikiRepository, branch: string, namespace?: string) => void;
         private complete;
     }
 }

@@ -42,7 +42,7 @@ module Profiles {
       this.kubernetes = kubernetes;
     }
 
-    load = (wiki:Wiki.GitWikiRepository, branch:string):void => {
+    load = (wiki:Wiki.GitWikiRepository, branch:string, namespace?:string):void => {
       this.loading = true;
       this.requests++;
       let data:Container[] = [];
@@ -57,10 +57,10 @@ module Profiles {
                 name: page.name.replace(/.cfg$/, ''),
                 path: page.path,
                 text: page.text,
-                // TODO: better mapping and namespace support
-                rc: this.kubernetes.getReplicationController('default', page.name.replace(/.cfg$/, '')),
+                // TODO: implement a more robust mapping between the container project and the corresponding RC
+                rc: this.kubernetes.getReplicationController(namespace || Kubernetes.currentKubernetesNamespace(), page.name.replace(/.cfg$/, '')),
                 // We could load the profiles if not already loaded and sync the containers data if needed
-                profiles: _.map(properties['profiles'].split(' '), (profile:string) => <Profile | string>_.find(this.profiles.data, {id: profile}) || profile),
+                profiles: _.map(properties['profiles'].split(' '), (profile:string) => <Profile|string>_.find(this.profiles.data, {id: profile}) || profile),
                 types: properties['container-type'].split(' '),
                 icons: properties['container-type'].split(' ').map(type => <Icon> {
                   title: type,
@@ -112,7 +112,7 @@ module Profiles {
     $scope.containers = containers.data;
     $scope.profiles = profiles.data;
     $scope.loading = () => containers.loading;
-    $scope.refresh = () => containers.load(new Wiki.GitWikiRepository($scope), $scope.branch);
+    $scope.refresh = () => containers.load(new Wiki.GitWikiRepository($scope), $scope.branch, $scope.namespace);
 
     $scope.$watchCollection('profiles', profiles =>
       $scope.containers.forEach((container:Container) =>

@@ -17,7 +17,7 @@
 
 <script type="text/ng-template" id="containerPods.html">
   <div class="ngCellText nowrap">
-    <i ng-if="row.entity.pods.length === 0" class="fa fa-power-off"></i>
+    <i ng-if="!row.entity.rc || row.entity.rc.$pods.length === 0" class="fa fa-power-off"></i>
     <ul class="plain-list">
       <li ng-repeat="pod in row.entity.rc.$pods">
         <i ng-class="pod.$statusCss"></i>

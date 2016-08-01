@@ -27,6 +27,10 @@
           {{pod.metadata.name}}
         </a>
         <span ng-show="pod.$jolokiaUrl && pod.$ready" ng-controller="Kubernetes.ConnectController">
+          <!--
+            Redirects to the OpenShift JVM plugin for the corresponding pod
+            Requires to use the 'serve-site' task for local development
+          -->
           <a class="clickable"
              ng-click="doConnect(pod)"
              title="Open a new window and connect to this container">

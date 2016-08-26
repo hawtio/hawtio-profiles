@@ -68,9 +68,8 @@ module Profiles {
         }
       };
 
-      function apply(properties:any, settings:string):string {
-        return settings.replace(/^([^#=]+)=(.*)$/gm, (match, key, value) => key + '=' + properties[key] || value);
-      }
+      let apply = (properties:any, settings:string):string =>
+        settings.replace(/^([^#=]+)=(.*)$/gm, (match, key, value) => key + '=' + properties[key] || value);
 
       $scope.refresh();
     }

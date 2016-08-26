@@ -38,11 +38,11 @@ module Profiles {
         }
       };
       blockTable.start("Saving ...");
-      for (let container of containers.cart) {
+      containers.cart.forEach(container => {
         saving++;
         // TODO: Add the ability to provide error callback to putPage API
         wiki.putPage($scope.branch, container.path, assignProfiles(container, profiles.cart), 'Assign profiles', success/*, failure*/);
-      }
+      });
     };
 
     let assignProfiles = (container:Container, profiles:Profile[]):string =>

@@ -45,20 +45,18 @@ module Profiles {
 
   // Directive that avoids rendering glitches when using ng-include and bypasses its complexity
   // as we use gulp-angular-templatecache to register AngularJS templates in the $templateCache.
-  module.directive('templateCacheInclude', ['$compile', '$templateCache', ($compile, $templateCache) => {
-    return {
+  module.directive('templateCacheInclude', ['$compile', '$templateCache', ($compile, $templateCache) => ({
       restrict: 'A',
       priority: 400,
-      compile: function (element, attrs) {
+      compile: (element, attrs) => {
         var templateName = attrs.templateCacheInclude;
         var template = $templateCache.get(templateName);
-        return function (scope, element) {
+        return (scope, element) => {
           element.html(template);
           $compile(element.contents())(scope);
         };
       }
-    };
-  }
+    })
   ]);
 
   hawtioPluginLoader.addModule(pluginName);

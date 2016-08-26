@@ -35,7 +35,7 @@
     "hawtio-integration": "~2.0.4",
     "angular-tree-control": "~0.2.21",
     "hawtio-dashboard": "~2.0.6",
-    "fabric8-console": "https://github.com/fabric8io/fabric8-console.git#70c75a6b87e9b96ef8e80b36f9b340bb360ef77b",
+    "fabric8-console": "https://github.com/fabric8io/fabric8-console.git#v2.2.173",
     "angular-block-ui": "~0.2.2"
   },
   "devDependencies": {

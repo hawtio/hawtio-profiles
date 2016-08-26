@@ -9,7 +9,6 @@
     "dist/hawtio-profiles.css"
   ],
   "ignore": [
-    "dist/hawtio-profiles-test.js",
     "**/.*",
     "node_modules",
     "libs",
@@ -28,13 +27,8 @@
     "hawtio-forms": "^v2.0.38",
     "hawtio-preferences": "~2.0.3",
     "hawtio-template-cache": "~2.0.3",
-    "hawtio-oauth": "~2.0.34",
     "hawtio-kubernetes-api": "~2.0.30",
     "hawtio-kubernetes": "~2.1.263",
-    "hawtio-kube3d": "~2.0.18",
-    "hawtio-integration": "~2.0.4",
-    "angular-tree-control": "~0.2.21",
-    "hawtio-dashboard": "~2.0.6",
     "fabric8-console": "https://github.com/fabric8io/fabric8-console.git#v2.2.173",
     "angular-block-ui": "~0.2.2"
   },
@@ -54,29 +48,10 @@
       "main": [
         "./src/term.js"
       ]
-    },
-    "bootstrap": {
-      "main": [
-        "dist/css/bootstrap.css",
-        "dist/js/bootstrap.js"
-      ]
-    },
-    "patternfly": {
-      "main": [
-        "dist/css/patternfly.css",
-        "dist/css/patternfly-additions.css",
-        "dist/js/patternfly.js"
-      ]
-    },
-    "font-awesome": {
-      "main": [
-        "css/font-awesome.css"
-      ]
     }
   },
   "resolutions": {
     "font-awesome": "^4.6.1",
-    "matchHeight": "~0.7.0",
     "angular": ">= 1.5.0 <= 1.6.0",
     "patternfly": "~3.9.0",
     "bootstrap-datepicker": "~1.6.1",

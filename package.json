@@ -1,6 +1,9 @@
 {
   "name": "hawtio-profiles",
   "version": "1.0.0",
+  "properties": {
+    "openshift-jvm-version": "1.0.45"
+  },
   "devDependencies": {
     "bower": "^1.3.12",
     "del": "^2.2.0",

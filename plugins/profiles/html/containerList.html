@@ -21,7 +21,7 @@
     <i ng-if="!row.entity.rc || row.entity.rc.$pods.length === 0" class="fa fa-power-off"></i>
     <ul class="plain-list">
       <li ng-repeat="pod in row.entity.rc.$pods">
-        <i ng-class="pod.$statusCss"></i>
+        <status-icon status="pod | podStatus"></status-icon>
         <a href="" title="View details for {{pod.metadata.name}}"
            ng-href="{{pod | kubernetesPageLink}}">
           {{pod.metadata.name}}

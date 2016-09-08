@@ -28,7 +28,7 @@
     "hawtio-preferences": "~2.0.3",
     "hawtio-template-cache": "~2.0.3",
     "hawtio-kubernetes-api": "~2.0.42",
-    "hawtio-kubernetes": "~2.1.274",
+    "hawtio-kubernetes": "~2.1.275",
     "fabric8-console": "https://github.com/fabric8io/fabric8-console.git#v2.2.174",
     "angular-block-ui": "~0.2.2"
   },

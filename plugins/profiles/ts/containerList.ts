@@ -38,5 +38,7 @@ module Profiles {
         }
       ]
     };
-  }])
+  }]);
+
+  module.filter('kubernetesPageLink', () => (entity, path1, path2) => UrlHelpers.join(Kubernetes.entityPageLink(entity), path1, path2));
 }

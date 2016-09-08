@@ -39,11 +39,17 @@
         </span>
         <span ng-show="pod.status.phase === 'Running'" ng-controller="Kubernetes.TermController">
           <span ng-repeat="container in pod.spec.containers" ng-show="canConnectTo(container)">
-            <i class="fa fa-television clickable" title="Open up a terminal to {{container.name}}" ng-click="openTerminal(pod.metadata.selfLink, container.name)"></i>
+            <a href="" ng-href="{{pod | kubernetesPageLink:'term':container.name}}">
+              <i class="fa fa-television clickable" title="Open up a terminal to {{pod.metadata.name}}:{{container.name}}"></i>
+            </a>
           </span>
         </span>
         <span ng-show="pod.status.phase === 'Running'" ng-controller="Kubernetes.PodLogLinkController">
-          <i class="fa fa-file-text" title="Open up the logs for {{pod.metadata.name}}" ng-click="openLogs(pod)"></i>
+          <span ng-repeat="container in pod.spec.containers">
+            <a href="" ng-href="{{pod | kubernetesPageLink:'log':container.name}}">
+              <i class="fa fa-file-text clickable" title="Open up the log for {{pod.metadata.name}}:{{container.name}}"></i>
+            </a>
+          </span>
         </span>
       </li>
     </ul>

@@ -59,56 +59,5 @@ module Profiles {
     })
   ]);
 
-  // Return results that match kubernetes/pkg/kubectl/resource_printer.go
-  module.filter('podStatus', function() {
-    return function(pod) {
-      if (!pod || (!pod.metadata.deletionTimestamp && !pod.status)) {
-        return '';
-      }
-
-      if (pod.metadata.deletionTimestamp) {
-        return 'Terminating';
-      }
-
-      var reason = pod.status.reason || pod.status.phase;
-
-      // Print detailed container reasons if available. Only the last will be
-      // displayed if multiple containers have this detail.
-      angular.forEach(pod.status.containerStatuses, function(containerStatus) {
-        var containerReason = _.get(containerStatus, 'state.waiting.reason') || _.get(containerStatus, 'state.terminated.reason'),
-            signal,
-            exitCode;
-
-        if (containerReason) {
-          reason = containerReason;
-          return;
-        }
-
-        signal = _.get(containerStatus, 'state.terminated.signal');
-        if (signal) {
-          reason = 'Signal: ' + signal;
-          return;
-        }
-
-        exitCode = _.get(containerStatus, 'state.terminated.exitCode');
-        if (exitCode) {
-          reason = 'Exit Code: ' + exitCode;
-        }
-      });
-
-      return reason;
-    };
-  });
-
-  module.directive('statusIcon', [() => ({
-      restrict: 'E',
-      templateUrl: 'plugins/profiles/html/status-icon.html',
-      scope: {
-        status: '=',
-        fixedWidth: '=?'
-      }
-    })
-  ]);
-
   hawtioPluginLoader.addModule(pluginName);
 }

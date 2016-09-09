@@ -91,6 +91,11 @@ module Profiles {
 
   module.service('profiles', Profiles);
 
+  module.filter('filterCollection', () => (collection, text) =>
+      Core.isBlank(text)
+          ? collection
+          : _.filter(collection, item => FilterHelpers.searchObject(item, text)));
+
   module.controller('Profiles.ProfilesController', ['$scope', '$location', 'marked', '$sce', 'profiles', ($scope, $location, marked, $sce, profiles:Profiles) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
 
@@ -99,6 +104,7 @@ module Profiles {
     $scope.selectedTags = profiles.tags;
 
     SelectionHelpers.decorate($scope);
+    $scope.isBlank = Core.isBlank;
 
     $scope.loading = () => profiles.loading;
 

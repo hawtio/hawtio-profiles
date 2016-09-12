@@ -20,7 +20,7 @@
     <div class="row-fluid">
       <div class="col-md-8">
         <accordion close-others="false">
-          <accordion-group is-open="profile.open" ng-repeat="profile in filteredProfiles | autoExpandProfile">
+          <accordion-group is-open="profile.open" ng-repeat="profile in filteredProfiles | autoExpandProfile:profiles:loading()">
             <accordion-heading>
               <div class="pull-left">
                 <i class="glyphicon" ng-class="{'glyphicon-chevron-down': profile.open, 'glyphicon-chevron-right': !profile.open}"></i>

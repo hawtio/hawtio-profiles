@@ -96,14 +96,21 @@ module Profiles {
           ? collection
           : _.filter(collection, item => FilterHelpers.searchObject(item, text)));
 
-  module.filter('autoExpandProfile', () => profiles => {
-    if (profiles.length === 1) {
-      profiles[0].autoExpandProfile = true;
-      profiles[0].open = true;
+  module.filter('autoExpandProfile', () => (filtered, profiles, loading) => {
+    if (filtered.length === 1 && (!loading || profiles.length > 1)) {
+      if (!filtered[0].open) {
+        filtered[0].autoExpandProfile = true;
+        filtered[0].open = true;
+      }
     } else {
-      _.filter(profiles, 'autoExpandProfile').forEach((profile:Profile) => profile.open = false);
+      _.filter(filtered, 'autoExpandProfile').forEach((profile:any) => {
+        if (!loading) {
+          profile.open = false;
+        }
+        profile.autoExpandProfile = false;
+      });
     }
-    return profiles;
+    return filtered;
   });
 
   module.controller('Profiles.ProfilesController', ['$scope', '$location', 'marked', '$sce', 'profiles', ($scope, $location, marked, $sce, profiles:Profiles) => {

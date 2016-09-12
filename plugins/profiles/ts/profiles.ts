@@ -5,24 +5,24 @@
 module Profiles {
 
   export interface Profile {
-    id: string;
-    path: string;
-    name: string;
-    tags?: string[];
-    summary?: string;
+    id:          string;
+    path:        string;
+    name:        string;
+    tags?:       string[];
+    summary?:    string;
     summaryUrl?: string;
-    icon?: string;
-    iconUrl?: string;
-    open?: boolean;
+    icon?:       string;
+    iconUrl?:    string;
+    open?:       boolean;
   }
 
   export class Profiles {
     loaded:boolean = false;
     loading:boolean = false;
-    private requests:number = 0;
     data:Profile[] = [];
     cart:Profile[] = [];
-    tags:string[] = [];
+    selectedTags:string[] = [];
+    private requests:number = 0;
 
     load = (wiki:Wiki.GitWikiRepository, branch:string, path:string):void => {
       this.loading = true;
@@ -51,7 +51,7 @@ module Profiles {
     private loadProfile = (wiki:Wiki.GitWikiRepository, branch:string, value:any):void => {
       var info = /^profiles\/((?:.+)\/)*(.+).profile$/.exec(value.path);
       var profile = <Profile>{
-        id: (info[1] ? info[1].replace(/\//g, '-') : '') + info[2],
+        id:   (info[1] ? info[1].replace(/\//g, '-') : '') + info[2],
         name: info[2],
         path: value.path,
         tags: info[1] ? info[1].slice(0, -1).split('/') : []
@@ -101,7 +101,7 @@ module Profiles {
 
     $scope.profiles = profiles.data;
     $scope.selection = profiles.cart;
-    $scope.selectedTags = profiles.tags;
+    $scope.selectedTags = profiles.selectedTags;
 
     SelectionHelpers.decorate($scope);
     $scope.isBlank = Core.isBlank;

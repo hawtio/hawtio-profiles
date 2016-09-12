@@ -16,10 +16,10 @@ declare module Profiles {
     class Profiles {
         loaded: boolean;
         loading: boolean;
-        private requests;
         data: Profile[];
         cart: Profile[];
-        tags: string[];
+        selectedTags: string[];
+        private requests;
         load: (wiki: Wiki.GitWikiRepository, branch: string, path: string) => void;
         private findProfiles;
         private loadProfile;

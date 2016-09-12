@@ -96,6 +96,16 @@ module Profiles {
           ? collection
           : _.filter(collection, item => FilterHelpers.searchObject(item, text)));
 
+  module.filter('autoExpandProfile', () => profiles => {
+    if (profiles.length === 1) {
+      profiles[0].autoExpandProfile = true;
+      profiles[0].open = true;
+    } else {
+      _.filter(profiles, 'autoExpandProfile').forEach((profile:Profile) => profile.open = false);
+    }
+    return profiles;
+  });
+
   module.controller('Profiles.ProfilesController', ['$scope', '$location', 'marked', '$sce', 'profiles', ($scope, $location, marked, $sce, profiles:Profiles) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
 

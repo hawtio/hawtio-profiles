@@ -20,8 +20,6 @@ module Profiles {
     loading:boolean = false;
     data:Profile[] = [];
     cart:Profile[] = [];
-    // Should ideally go the the view
-    selectedTags:string[] = [];
     private requests:number = 0;
 
     load = (wiki:Wiki.GitWikiRepository, branch:string, path:string):void => {
@@ -118,29 +116,30 @@ module Profiles {
     }
   }
 
+  class ProfileViews {
+    selectedTags:string[] = [];
+    profileViews:Object   = {};
+  }
+
   module.service('profiles', Profiles);
 
-  module.filter('filterCollection', () => (collection, text) =>
-      Core.isBlank(text)
-          ? collection
-          : _.filter(collection, item => FilterHelpers.searchObject(item, text)));
+  module.service('profileViews', ProfileViews);
 
-  module.controller('Profiles.ProfilesController', ['$scope', '$location', 'marked', '$sce', 'profiles', ($scope, $location, marked, $sce, profiles:Profiles) => {
+  module.filter('filterCollection', () => (collection, text) =>
+    Core.isBlank(text)
+      ? collection
+      : _.filter(collection, item => FilterHelpers.searchObject(item, text)));
+
+  module.controller('Profiles.ProfilesController',
+      ['$scope', '$location', 'marked', '$sce', 'profiles', 'profileViews',
+       ($scope, $location, marked, $sce, profiles:Profiles, profileViews:ProfileViews) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
 
     $scope.profiles = profiles.data;
     $scope.selection = profiles.cart;
-    $scope.selectedTags = profiles.selectedTags;
-    $scope.profileViews = {};
 
-    $scope.$watchCollection('profiles', profiles =>
-      _.reduce(profiles, (profileViews, profile:Profile) => {
-        if (!_.has(profileViews, profile.id)) {
-          profileViews[profile.id] = new ProfileView($scope);
-        }
-        return profileViews;
-      }, $scope.profileViews)
-    );
+    $scope.selectedTags = profileViews.selectedTags;
+    $scope.profileViews = profileViews.profileViews;
 
     SelectionHelpers.decorate($scope);
     $scope.isBlank = Core.isBlank;
@@ -166,13 +165,25 @@ module Profiles {
 
     $scope.assignProfiles = () => $location.path(UrlHelpers.join('/workspaces', $scope.namespace, 'projects', $scope.projectId, 'profiles', 'containers', 'assignProfiles'));
 
+    let updateProfileViews = profiles => _.reduce(profiles, (profileViews, profile: Profile) => {
+      if (!_.has(profileViews, profile.id)) {
+        profileViews[profile.id] = new ProfileView($scope);
+      } else {
+        profileViews[profile.id].scope = $scope;
+      }
+      return profileViews;
+    }, $scope.profileViews);
+
     $scope.refresh = () => {
-      $scope.profileViews = {};
+      _.keys($scope.profileViews).forEach(key => delete $scope.profileViews[key]);
+      $scope.$watchCollection('profiles', updateProfileViews);
       profiles.load(wiki, $scope.branch, 'profiles');
     };
 
     if (!(profiles.loaded || profiles.loading)) {
       $scope.refresh();
+    } else {
+      updateProfileViews($scope.profiles);
     }
   }])
 }

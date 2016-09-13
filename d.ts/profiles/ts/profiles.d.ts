@@ -17,7 +17,6 @@ declare module Profiles {
         loading: boolean;
         data: Profile[];
         cart: Profile[];
-        selectedTags: string[];
         private requests;
         load: (wiki: Wiki.GitWikiRepository, branch: string, path: string) => void;
         private findProfiles;

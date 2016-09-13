@@ -90,7 +90,8 @@ module Profiles {
   }
 
   class ProfileView {
-    open:  number = 0;
+    open:  boolean;
+    force: boolean;
     scope: any;
 
     constructor (scope: any) {
@@ -98,21 +99,22 @@ module Profiles {
     }
 
     get openOrSingle():boolean {
-      if (this.open === 0) {
-        let scope = this.scope;
-        if (scope.filteredProfiles.length === 1) {
-          if (!scope.loading || scope.profiles.length > 1) {
-            return true;
-          }
-        } else {
-          return false;
+      let scope = this.scope;
+      if (scope.filteredProfiles.length === 1) {
+        if (!this.force && (!scope.loading || scope.profiles.length > 1)) {
+          return true;
         }
       } else {
-        return this.open > 0;
+        this.force = false;
       }
+      return this.open;
     }
+
     set openOrSingle(open:boolean) {
-      this.open = open ? 1 : -1;
+      if (this.scope.filteredProfiles.length === 1) {
+        this.force = true;
+      }
+      this.open = open;
     }
   }
 

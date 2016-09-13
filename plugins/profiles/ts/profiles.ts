@@ -13,7 +13,6 @@ module Profiles {
     summaryUrl?: string;
     icon?:       string;
     iconUrl?:    string;
-    open?:       boolean;
   }
 
   export class Profiles {
@@ -21,6 +20,7 @@ module Profiles {
     loading:boolean = false;
     data:Profile[] = [];
     cart:Profile[] = [];
+    // Should ideally go the the view
     selectedTags:string[] = [];
     private requests:number = 0;
 
@@ -89,6 +89,33 @@ module Profiles {
     };
   }
 
+  class ProfileView {
+    open:  number = 0;
+    scope: any;
+
+    constructor (scope: any) {
+      this.scope = scope;
+    }
+
+    get openOrSingle():boolean {
+      if (this.open === 0) {
+        let scope = this.scope;
+        if (scope.filteredProfiles.length === 1) {
+          if (!scope.loading || scope.profiles.length > 1) {
+            return true;
+          }
+        } else {
+          return false;
+        }
+      } else {
+        return this.open > 0;
+      }
+    }
+    set openOrSingle(open:boolean) {
+      this.open = open ? 1 : -1;
+    }
+  }
+
   module.service('profiles', Profiles);
 
   module.filter('filterCollection', () => (collection, text) =>
@@ -96,29 +123,22 @@ module Profiles {
           ? collection
           : _.filter(collection, item => FilterHelpers.searchObject(item, text)));
 
-  module.filter('autoExpandProfile', () => (filtered, profiles, loading) => {
-    if (filtered.length === 1 && (!loading || profiles.length > 1)) {
-      if (!filtered[0].open) {
-        filtered[0].autoExpandProfile = true;
-        filtered[0].open = true;
-      }
-    } else {
-      _.filter(filtered, 'autoExpandProfile').forEach((profile:any) => {
-        if (!loading) {
-          profile.open = false;
-        }
-        profile.autoExpandProfile = false;
-      });
-    }
-    return filtered;
-  });
-
   module.controller('Profiles.ProfilesController', ['$scope', '$location', 'marked', '$sce', 'profiles', ($scope, $location, marked, $sce, profiles:Profiles) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
 
     $scope.profiles = profiles.data;
     $scope.selection = profiles.cart;
     $scope.selectedTags = profiles.selectedTags;
+    $scope.profileViews = {};
+
+    $scope.$watchCollection('profiles', profiles =>
+      _.reduce(profiles, (profileViews, profile:Profile) => {
+        if (!_.has(profileViews, profile.id)) {
+          profileViews[profile.id] = new ProfileView($scope);
+        }
+        return profileViews;
+      }, $scope.profileViews)
+    );
 
     SelectionHelpers.decorate($scope);
     $scope.isBlank = Core.isBlank;
@@ -144,7 +164,10 @@ module Profiles {
 
     $scope.assignProfiles = () => $location.path(UrlHelpers.join('/workspaces', $scope.namespace, 'projects', $scope.projectId, 'profiles', 'containers', 'assignProfiles'));
 
-    $scope.refresh = () => profiles.load(wiki, $scope.branch, 'profiles');
+    $scope.refresh = () => {
+      $scope.profileViews = {};
+      profiles.load(wiki, $scope.branch, 'profiles');
+    };
 
     if (!(profiles.loaded || profiles.loading)) {
       $scope.refresh();

@@ -20,10 +20,10 @@
     <div class="row-fluid">
       <div class="col-md-8">
         <accordion close-others="false">
-          <accordion-group is-open="profile.open" ng-repeat="profile in filteredProfiles | autoExpandProfile:profiles:loading()">
+          <accordion-group ng-init="profileView = profileViews[profile.id]" is-open="profileView.openOrSingle" ng-repeat="profile in filteredProfiles">
             <accordion-heading>
               <div class="pull-left">
-                <i class="glyphicon" ng-class="{'glyphicon-chevron-down': profile.open, 'glyphicon-chevron-right': !profile.open}"></i>
+                <i class="glyphicon" ng-class="{'glyphicon-chevron-down': profileView.openOrSingle, 'glyphicon-chevron-right': !profileView.openOrSingle}"></i>
               </div>
               <div class="pull-right">
                 <!-- See https://github.com/angular-ui/bootstrap/issues/3299 -->
@@ -36,7 +36,7 @@
                 {{profile.id}}
               </div>
             </accordion-heading>
-            <div ng-if="profile.open" ng-include="'plugins/profiles/html/profileSummary.html'" onload="loadSummary(profile)"></div>
+            <div ng-if="profileView.openOrSingle" ng-include="'plugins/profiles/html/profileSummary.html'" onload="loadSummary(profile)"></div>
           </accordion-group>
         </accordion>
       </div>

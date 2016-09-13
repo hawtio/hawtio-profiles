@@ -65,9 +65,8 @@ module Profiles {
             profile.iconUrl = child.path;
           }
         }
-
+        // Replace the existing profile with the new loaded one
         this.data.splice(_.sortedIndex(this.data, profile, 'id'), 0, profile);
-
         // Update the profiles selection in case it contains this profile
         let i = _.findIndex(this.cart, {id: profile.id});
         if (i >= 0) {
@@ -122,7 +121,6 @@ module Profiles {
   }
 
   module.service('profiles', Profiles);
-
   module.service('profileViews', ProfileViews);
 
   module.filter('filterCollection', () => (collection, text) =>
@@ -143,18 +141,15 @@ module Profiles {
 
     SelectionHelpers.decorate($scope);
     $scope.isBlank = Core.isBlank;
-
     $scope.loading = () => profiles.loading;
-
     $scope.wikiLink = path => Wiki.viewLink($scope, path, $location);
 
     let wiki = new Wiki.GitWikiRepository($scope);
 
-    $scope.loadSummary = (profile:Profile) => {
+    $scope.loadSummary = (profile: Profile) => {
       if (profile.iconUrl) {
-        wiki.getPage($scope.branch, profile.iconUrl, null, data => {
-          profile.icon = $sce.trustAsHtml(data.text.replace(/(width|height)="[^"]+"/g, ''));
-        });
+        wiki.getPage($scope.branch, profile.iconUrl, null, data =>
+          profile.icon = $sce.trustAsHtml(data.text.replace(/(width|height)="[^"]+"/g, '')));
       }
       if (profile.summaryUrl) {
         wiki.getPage($scope.branch, profile.summaryUrl, null, data => profile.summary = marked(data.text));
@@ -165,7 +160,7 @@ module Profiles {
 
     $scope.assignProfiles = () => $location.path(UrlHelpers.join('/workspaces', $scope.namespace, 'projects', $scope.projectId, 'profiles', 'containers', 'assignProfiles'));
 
-    let updateProfileViews = profiles => _.reduce(profiles, (profileViews, profile: Profile) => {
+    let updateProfileViews = profiles => _.reduce(profiles, (profileViews: ProfileViews, profile: Profile) => {
       if (!_.has(profileViews, profile.id)) {
         profileViews[profile.id] = new ProfileView($scope);
       } else {

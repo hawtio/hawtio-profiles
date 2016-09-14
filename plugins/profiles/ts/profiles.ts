@@ -123,14 +123,17 @@ module Profiles {
   module.service('profiles', Profiles);
   module.service('profileViews', ProfileViews);
 
+  // Wiki images are cached in base 64 so that they can be rendered
+  module.factory('images', () => ({}));
+
   module.filter('filterCollection', () => (collection, text) =>
     Core.isBlank(text)
       ? collection
       : _.filter(collection, item => FilterHelpers.searchObject(item, text)));
 
   module.controller('Profiles.ProfilesController',
-      ['$scope', '$location', 'marked', '$sce', 'profiles', 'profileViews',
-       ($scope, $location, marked, $sce, profiles:Profiles, profileViews:ProfileViews) => {
+      ['$scope', '$location', 'marked', '$sce', 'profiles', 'profileViews', 'images',
+       ($scope, $location, marked, $sce, profiles: Profiles, profileViews: ProfileViews, images: any) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
 
     $scope.profiles = profiles.data;
@@ -143,6 +146,7 @@ module Profiles {
     $scope.isBlank = Core.isBlank;
     $scope.loading = () => profiles.loading;
     $scope.wikiLink = path => Wiki.viewLink($scope, path, $location);
+    $scope.images = images;
 
     let wiki = new Wiki.GitWikiRepository($scope);
 
@@ -151,7 +155,30 @@ module Profiles {
         wiki.getPage($scope.branch, profile.iconUrl, null, data => profile.icon = $sce.trustAsHtml(data.text));
       }
       if (profile.summaryUrl) {
-        wiki.getPage($scope.branch, profile.summaryUrl, null, data => profile.summary = marked(data.text));
+        let renderer = new marked.Renderer();
+        renderer.image = (href: string, title: string, text: string) => {
+          let uri = new URI(href);
+          if (uri.is('relative')) {
+            // TODO: add support for URI starting with a forward slash
+            let key = UrlHelpers.join(profile.path, href);
+            if (_.has(images, key)) {
+              // Let's directly include the cached image
+              return '<img src="' + images[key] + '" alt="' + (title ? title : text) + '" />';
+            } else {
+              // Get the image data from the wiki
+              wiki.getPage($scope.branch, key, null, data =>
+                $scope.images[key] = 'data:image/png;base64,' + data.content);
+              // and binds the image src to the images cache
+              return '<img ng-src="{{images[\'' + key + '\']}}" alt="' + (title ? title : text) + '" />';
+            }
+          } else {
+            // Simply return the img tag with the original location
+            return '<img src="' + href + '" alt="' + (title ? title : text) + '" />';
+          }
+        };
+
+        wiki.getPage($scope.branch, profile.summaryUrl, null,
+            data => profile.summary = marked(data.text, {renderer: renderer}));
       } else {
         profile.summary = '<em>no summary</em>';
       }

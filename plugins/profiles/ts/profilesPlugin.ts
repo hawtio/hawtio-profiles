@@ -11,7 +11,7 @@ module Profiles {
   export var log:Logging.Logger = Logger.get(pluginName);
   export var templatePath = 'plugins/' + pluginName + '/html/';
 
-  export var module = angular.module(pluginName, ['hawtio-core', 'hawtio-ui', 'hawtio-forms', 'blockUI']);
+  export var module = angular.module(pluginName, ['hawtio-core', 'hawtio-ui', 'hawtio-forms', 'blockUI', 'ngSVGAttributes', 'angular-bind-html-compile']);
 
   module.config(['$routeProvider', 'blockUIConfig', ($routeProvider:ng.route.IRouteProvider, blockUIConfig) => {
     blockUIConfig.autoBlock = false;

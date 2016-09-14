@@ -1,14 +1,11 @@
 <div class="row">
   <div class="col-md-2">
     <a href="{{wikiLink(profile.path)}}">Details...</a>
-    <p></p>
-    <div class="app-logo" ng-show="profile.summary">
-      <!-- TODO: use defs / use instead of embedded the SVG icon multiple times -->
-      <!-- We need to use the bind-html-cmompile so that the directives from
-           angular-svg-base are applied -->
-      <div ng-show="profile.iconUrl" bind-html-compile="profile.icon"></div>
-      <img src="img/fabric8_icon.svg" ng-hide="profile.iconUrl"/>
-    </div>
+    <!-- TODO: use defs / use instead of embedded the SVG icon multiple times -->
+    <!-- We need to use the bind-html-compile so that the directives from
+         angular-svg-base are applied -->
+      <div class="profile-logo inline-block" ng-show="profile.iconUrl" bind-html-compile="profile.icon"></div>
+      <img class="profile-logo" src="img/fabric8_icon.svg" ng-hide="profile.iconUrl"/>
   </div>
 
   <div class="col-md-10">

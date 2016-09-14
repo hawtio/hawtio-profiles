@@ -148,8 +148,7 @@ module Profiles {
 
     $scope.loadSummary = (profile: Profile) => {
       if (profile.iconUrl) {
-        wiki.getPage($scope.branch, profile.iconUrl, null, data =>
-          profile.icon = $sce.trustAsHtml(data.text.replace(/(width|height)="[^"]+"/g, '')));
+        wiki.getPage($scope.branch, profile.iconUrl, null, data => profile.icon = $sce.trustAsHtml(data.text));
       }
       if (profile.summaryUrl) {
         wiki.getPage($scope.branch, profile.summaryUrl, null, data => profile.summary = marked(data.text));

@@ -160,7 +160,7 @@ module Profiles {
           let uri = new URI(href);
           if (uri.is('relative')) {
             // TODO: add support for URI starting with a forward slash
-            let key = UrlHelpers.join(profile.path, href);
+            let key = uri.absoluteTo(UrlHelpers.join(profile.path, '/')).normalize().toString();
             if (_.has(images, key)) {
               // Let's directly include the cached image
               return '<img src="' + images[key] + '" alt="' + (title ? title : text) + '" />';

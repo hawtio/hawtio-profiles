@@ -16,7 +16,7 @@
   ],
   "dependencies": {
     "bootstrap": "~3.3.6",
-    "patternfly": "~3.5.1",
+    "patternfly": "^3.5.1",
     "angular-patternfly": "^3.5.1",
     "font-awesome": "^4.5.0",
     "hawtio-core": "~2.0.22",
@@ -55,7 +55,7 @@
   "resolutions": {
     "font-awesome": "^4.6.1",
     "angular": ">= 1.5.0 <= 1.6.0",
-    "patternfly": "~3.10.0",
+    "patternfly": "^3.11.0",
     "bootstrap-datepicker": "~1.6.1",
     "bootstrap-touchspin": "~3.1.1",
     "bootstrap-select": "~1.10.0",

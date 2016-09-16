@@ -32,7 +32,8 @@
     "fabric8-console": "https://github.com/fabric8io/fabric8-console.git#v2.2.174",
     "angular-block-ui": "~0.2.2",
     "angular-svg-base": "~0.0.3",
-    "angular-bind-html-compile": "1.1.0"
+    "angular-bind-html-compile": "1.1.0",
+    "angular-img-http-src": "https://github.com/dougmoscrop/angular-img-http-src.git#d5a7148"
   },
   "devDependencies": {
     "hawtio-core-dts": "~2.0.0"

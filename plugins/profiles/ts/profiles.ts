@@ -123,17 +123,14 @@ module Profiles {
   module.service('profiles', Profiles);
   module.service('profileViews', ProfileViews);
 
-  // Wiki images are cached in base 64 so that they can be rendered
-  module.factory('images', () => ({}));
-
   module.filter('filterCollection', () => (collection, text) =>
     Core.isBlank(text)
       ? collection
       : _.filter(collection, item => FilterHelpers.searchObject(item, text)));
 
   module.controller('Profiles.ProfilesController',
-      ['$scope', '$location', 'marked', '$sce', 'profiles', 'profileViews', 'images',
-       ($scope, $location, marked, $sce, profiles: Profiles, profileViews: ProfileViews, images: any) => {
+      ['$scope', '$location', 'marked', '$sce', 'profiles', 'profileViews',
+       ($scope, $location, marked, $sce, profiles: Profiles, profileViews: ProfileViews) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
 
     $scope.profiles = profiles.data;
@@ -146,7 +143,6 @@ module Profiles {
     $scope.isBlank = Core.isBlank;
     $scope.loading = () => profiles.loading;
     $scope.wikiLink = path => Wiki.viewLink($scope, path, $location);
-    $scope.images = images;
 
     let wiki = new Wiki.GitWikiRepository($scope);
 
@@ -164,17 +160,20 @@ module Profiles {
             } else {
               uri = uri.absoluteTo(UrlHelpers.join(profile.path, '/'));
             }
-            let key = uri.normalize().toString();
-            if (_.has(images, key)) {
-              // Let's directly include the cached image
-              return '<img src="' + images[key] + '" alt="' + (title ? title : text) + '" />';
-            } else {
-              // Get the image data from the wiki
-              wiki.getPage($scope.branch, key, null, data =>
-                $scope.images[key] = 'data:image/png;base64,' + data.content);
-              // and binds the image src to the images cache
-              return '<img ng-src="{{images[\'' + key + '\']}}" alt="' + (title ? title : text) + '" />';
-            }
+            // Get the image URL for the Forge REST API
+            let url = Forge.createHttpUrl($scope.projectId,
+              new URI(Kubernetes.inject<string>("ForgeApiURL"))
+                .segment('repos/project')
+                // TODO: fix URI.js d.ts
+                .segment($scope.namespace || Kubernetes.currentKubernetesNamespace())
+                .segment($scope.projectId)
+                .segment('raw')
+                .segment(uri.normalize().toString())
+                .toString());
+            // and use URL.createObjectURL via angular-img-http-src to get an URL
+            // for the image BLOB
+            // TODO: display a spinner while the image is loading
+            return '<img http-src="' + url + '" alt="' + (title ? title : text) + '" />';
           } else {
             // Simply return the img tag with the original location
             return '<img src="' + href + '" alt="' + (title ? title : text) + '" />';

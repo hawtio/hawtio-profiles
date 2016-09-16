@@ -10,8 +10,8 @@
 
   <div class="col-md-10">
     <i ng-hide="profile.summary" class="fa fa-spinner fa-spin"></i>
-    <!-- We need to use the bind-html-compile directive so that the ng-src attribute
-         gets compiled for cached wiki images -->
+    <!-- We need to use the bind-html-compile directive so that the http-src directive
+         from angular-img-http-src applied -->
     <div class="profile-summary" ng-show="profile.summary" bind-html-compile="profile.summary"></div>
   </div>
 </div>

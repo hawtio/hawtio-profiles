@@ -20,6 +20,7 @@ module Profiles {
 
     $scope.assignProfiles = () => {
       let wiki = new Wiki.GitWikiRepository($scope);
+      // TODO: use PatternFly notifications
       let success = response => {
         Wiki.onComplete(response);
         Core.notification('success', response.file + ' saved!');
@@ -40,8 +41,7 @@ module Profiles {
       blockTable.start("Saving ...");
       containers.cart.forEach(container => {
         saving++;
-        // TODO: Add the ability to provide error callback to putPage API
-        wiki.putPage($scope.branch, container.path, assignProfiles(container, profiles.cart), 'Assign profiles', success/*, failure*/);
+        wiki.putPage($scope.branch, container.path, assignProfiles(container, profiles.cart), 'Assign profiles', success, failure);
       });
     };
 

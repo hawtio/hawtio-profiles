@@ -27,7 +27,7 @@
     "hawtio-forms": "~2.0.38",
     "hawtio-preferences": "~2.0.3",
     "hawtio-template-cache": "~2.0.3",
-    "hawtio-kubernetes-api": "~2.0.42",
+    "hawtio-kubernetes-api": "~2.0.46",
     "hawtio-kubernetes": "~2.1.278",
     "fabric8-console": "https://github.com/fabric8io/fabric8-console.git#281f452",
     "angular-block-ui": "~0.2.2",
@@ -36,7 +36,7 @@
     "angular-img-http-src": "https://github.com/dougmoscrop/angular-img-http-src.git#d5a7148"
   },
   "devDependencies": {
-    "hawtio-core-dts": "~2.0.0"
+    "hawtio-core-dts": "~2.0.29"
   },
   "overrides": {
     "google-code-prettify": {

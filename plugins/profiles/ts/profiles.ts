@@ -164,7 +164,6 @@ module Profiles {
             let url = Forge.createHttpUrl($scope.projectId,
               new URI(Kubernetes.inject<string>("ForgeApiURL"))
                 .segment('repos/project')
-                // TODO: fix URI.js d.ts
                 .segment($scope.namespace || Kubernetes.currentKubernetesNamespace())
                 .segment($scope.projectId)
                 .segment('raw')

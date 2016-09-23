@@ -142,7 +142,7 @@ module Profiles {
     SelectionHelpers.decorate($scope);
     $scope.isBlank = Core.isBlank;
     $scope.loading = () => profiles.loading;
-    $scope.wikiLink = path => Wiki.viewLink($scope, path, $location);
+    $scope.wikiLink = path => Wiki.viewLink($scope.projectId, $scope.branch, path, $location);
 
     let wiki = new Wiki.GitWikiRepository($scope);
 

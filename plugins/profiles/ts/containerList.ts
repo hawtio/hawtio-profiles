@@ -6,7 +6,7 @@ module Profiles {
 
   module.controller('Profiles.ContainerListController', ['$scope', '$location', '$templateCache', 'profiles', 'containers', ($scope, $location, $templateCache, profiles:Profiles, containers:Containers) => {
 
-    $scope.viewProfile = profile => $location.path(Wiki.viewLink($scope, profile.path, $location));
+    $scope.viewProfile = profile => $location.path(Wiki.viewLink($scope.projectId, $scope.branch, profile.path, $location));
     $scope.profiles = profiles;
     $scope.containers = containers.data;
 

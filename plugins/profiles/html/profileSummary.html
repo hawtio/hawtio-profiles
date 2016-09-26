@@ -1,11 +1,10 @@
 <div class="row">
   <div class="col-md-2">
-    <a href="{{wikiLink(profile.path)}}">Details...</a>
-    <!-- TODO: use <defs> / <use> instead of embedded the SVG icon multiple times -->
-    <!-- We need to use the bind-html-compile directive so that the directives from
-         angular-svg-base are applied -->
-      <div class="profile-logo inline-block" ng-show="profile.iconUrl" bind-html-compile="profile.icon"></div>
-      <img class="profile-logo" src="img/fabric8_icon.svg" ng-hide="profile.iconUrl"/>
+    <a ng-href="{{wikiLink(profile.path)}}">Details...</a>
+    <!-- ideally angular-img-http-src would reuse the same BLOB for the same URLs though
+         it seems it creates a new one each time -->
+      <img class="profile-logo" ng-if="profile.iconUrl" http-src="{{rawForgeUrl(profile.iconUrl)}}" media-type="image/svg+xml;charset=utf-8" />
+      <img class="profile-logo" ng-if="!profile.iconUrl" src="img/fabric8_icon.svg" />
   </div>
 
   <div class="col-md-10">

@@ -146,12 +146,19 @@ module Profiles {
 
     let wiki = new Wiki.GitWikiRepository($scope);
 
+    $scope.rawForgeUrl = (path: string) => Forge.createHttpUrl($scope.projectId,
+      new URI(Kubernetes.inject<string>("ForgeApiURL"))
+        .segment('repos/project')
+        .segment($scope.namespace || Kubernetes.currentKubernetesNamespace())
+        .segment($scope.projectId)
+        .segment('raw')
+        .segment(path)
+        .toString());
+
     $scope.loadSummary = (profile: Profile) => {
-      if (profile.iconUrl) {
-        wiki.getPage($scope.branch, profile.iconUrl, null, data => profile.icon = $sce.trustAsHtml(data.text));
-      }
       if (profile.summaryUrl) {
         let renderer = new marked.Renderer();
+        // Adapt the relative image URLs to retrieve content from the Forge API
         renderer.image = (href: string, title: string, text: string) => {
           let uri = new URI(href);
           if (uri.is('relative')) {
@@ -161,18 +168,10 @@ module Profiles {
               uri = uri.absoluteTo(UrlHelpers.join(profile.path, '/'));
             }
             // Get the image URL for the Forge REST API
-            let url = Forge.createHttpUrl($scope.projectId,
-              new URI(Kubernetes.inject<string>("ForgeApiURL"))
-                .segment('repos/project')
-                .segment($scope.namespace || Kubernetes.currentKubernetesNamespace())
-                .segment($scope.projectId)
-                .segment('raw')
-                .segment(uri.normalize().toString())
-                .toString());
-            // and use URL.createObjectURL via angular-img-http-src to get an URL
-            // for the image BLOB
+            let src = $scope.rawForgeUrl(uri.normalize().toString());
+            // and use URL.createObjectURL via angular-img-http-src to get an URL for the image BLOB
             // TODO: display a spinner while the image is loading
-            return '<img http-src="' + url + '" alt="' + (title ? title : text) + '" />';
+            return '<img http-src="' + src + '" alt="' + (title ? title : text) + '" />';
           } else {
             // Simply return the img tag with the original location
             return '<img src="' + href + '" alt="' + (title ? title : text) + '" />';

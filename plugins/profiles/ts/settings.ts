@@ -6,6 +6,9 @@ module Profiles {
 
   module.controller('Profiles.SettingsController', ['$scope', ($scope) => {
       $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
+      // Associate this controller scope to the ForgeProjectService
+      Forge.updateForgeProject($scope);
+
       var wikiRepository = new Wiki.GitWikiRepository($scope);
   
       // We use $scope.loading to reference count loading operations so that we know when all the data

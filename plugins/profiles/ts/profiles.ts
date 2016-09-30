@@ -132,6 +132,8 @@ module Profiles {
       ['$scope', '$location', 'marked', '$sce', 'profiles', 'profileViews',
        ($scope, $location, marked, $sce, profiles: Profiles, profileViews: ProfileViews) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
+    // Associate this controller scope to the ForgeProjectService
+    Forge.updateForgeProject($scope);
 
     $scope.profiles = profiles.data;
     $scope.selection = profiles.cart;

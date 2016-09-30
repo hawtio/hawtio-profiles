@@ -107,6 +107,9 @@ module Profiles {
       ['$scope', 'containers', 'profiles', 'KubernetesModel',
         ($scope, containers:Containers, profiles:Profiles, kubernetes:KubernetesModelService) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
+    // Associate this controller scope to the ForgeProjectService
+    Forge.updateForgeProject($scope);
+
     $scope.containers = containers.data;
     $scope.profiles = profiles.data;
     $scope.loading = () => containers.loading;

@@ -6,6 +6,9 @@ module Profiles {
 
   module.controller('Profiles.AssignProfilesController', ['$scope', '$location', '$templateCache', 'profiles', 'containers', 'blockUI', ($scope, $location, $templateCache, profiles:Profiles, containers:Containers, blockUI) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
+    // Associate this controller scope to the ForgeProjectService
+    Forge.updateForgeProject($scope);
+
     $scope.profiles = profiles.cart;
     $scope.containers = containers.cart;
     $scope.selectable = true;

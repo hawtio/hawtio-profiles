@@ -189,6 +189,8 @@ module Profiles {
 
     $scope.assignProfiles = () => $location.path(UrlHelpers.join('/workspaces', $scope.namespace, 'projects', $scope.projectId, 'profiles', 'containers', 'assignProfiles'));
 
+    $scope.deployProfiles = () => $location.path(UrlHelpers.join('/workspaces', $scope.namespace, 'projects', $scope.projectId, 'profiles', 'containers', 'deployProfiles'));
+
     let updateProfileViews = profiles => _.reduce(profiles, (profileViews: ProfileViews, profile: Profile) => {
       if (!_.has(profileViews, profile.id)) {
         profileViews[profile.id] = new ProfileView($scope);

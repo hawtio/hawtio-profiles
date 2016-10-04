@@ -39,6 +39,7 @@ module Profiles {
     $routeProvider
       .when(base, route('profiles.html', false))
       .when(join(base, 'containers', 'assignProfiles'), route('assignProfiles.html', false))
+      .when(join(base, 'containers', 'deployProfiles'), route('deployProfiles.html', false))
       .when(join(base, 'containers'), route('containers.html', false))
       .when(join(base, 'settings'), route('settings.html', false));
   }]);

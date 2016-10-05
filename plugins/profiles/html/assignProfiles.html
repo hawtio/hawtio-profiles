@@ -7,27 +7,61 @@
   <h2>Assign profiles to containers</h2>
 
   <div class="row">
-    <div ng-show="profiles.length > 0">
-      <ul class="plain-list">
-        Select the containers to assign the
-        <li class="inline-block" ng-repeat="profile in profiles">
-          <button type="button" class="btn btn-success btn-xs"
-                  ng-click="toggleSelectionFromGroup(profiles, profile)">
-            {{profile.id}} <i class="glyphicon glyphicon-remove" aria-hidden="true"></i>
-          </button><span ng-if="$index < profiles.length - 2">,&nbsp;</span><span ng-if="$index === profiles.length - 2"> and&nbsp;</span>
-        </li>
-        <ng-pluralize count="profiles.length" when="{'one': 'profile', 'other': 'profiles'}"></ng-pluralize> to:
-      </ul>
-    </div>
-    <div ng-hide="profiles.length > 0" class="text-muted">
-      No profiles selected. Please go to the profiles tab and select some profiles.
-    </div>
-    <div class="pull-right">
-      <button class="btn btn-primary" ng-disabled="profiles.length == 0 || containers.length == 0 || loading() || saving()" ng-click="assignProfiles()"><i class="fa fa-cloud-upload"></i> Assign</button>
-    </div>
+    <form class="form-horizontal">
+      <div class="form-group has-feedback" ng-class="profiles.cart.length > 0 ? 'has-success' : 'has-error'">
+        <label class="control-label col-sm-1">Profiles</label>
+        <div class="col-sm-6">
+          <div class="input-group">
+            <ui-select multiple sortable="true" ng-model="profiles.cart" theme="bootstrap" aria-describedby="selectProfilesStatus">
+              <ui-select-match placeholder="Select profiles...">{{$item.name}}</ui-select-match>
+              <ui-select-choices repeat="profile in (profiles.data | filter: $select.search) track by profile.id">
+                <div ng-bind-html="profile.id | highlight: $select.search"></div>
+                <small>(<span ng-bind-html="profile.name | highlight: $select.search"></span>)</small>
+              </ui-select-choices>
+              <ui-select-no-choice>
+                No profile is available! Click on the refresh button
+              </ui-select-no-choice>
+            </ui-select>
+            <span class="glyphicon form-control-feedback" ng-class="profiles.cart.length > 0 ? 'glyphicon-ok' : 'glyphicon-remove'" aria-hidden="true"></span>
+            <span id="selectProfilesStatus" class="sr-only">{{profiles.cart.length > 0 ? '(success)' : '(error)'}}</span>
+            <span class="input-group-addon">
+              <span class="fa fa-refresh" ng-click="refreshProfiles()" ng-class="{'fa-spin': profiles.loading}"></span>
+            </span>
+          </div>
+          <span ng-show="profiles.cart.length == 0" class="help-block">At least one profile is required</span>
+        </div>
+      </div>
+      <div class="form-group has-feedback" ng-class="containers.cart.length > 0 ? 'has-success' : 'has-error'">
+        <label class="control-label col-sm-1">Containers</label>
+        <div class="col-sm-6">
+          <div class="input-group">
+            <ui-select multiple sortable="true" ng-model="containers.cart" theme="bootstrap" aria-describedby="selectContainersStatus">
+              <ui-select-match placeholder="Select containers...">{{$item.name}}</ui-select-match>
+              <ui-select-choices repeat="container in (containers.data | filter: $select.search)">
+                <div ng-bind-html="container.name | highlight: $select.search"></div>
+              </ui-select-choices>
+              <ui-select-no-choice>
+                No container is available! Click on the refresh button
+              </ui-select-no-choice>
+            </ui-select>
+            <span class="glyphicon form-control-feedback" ng-class="containers.cart.length > 0 ? 'glyphicon-ok' : 'glyphicon-remove'" aria-hidden="true"></span>
+            <span id="selectContainersStatus" class="sr-only">{{containers.cart.length > 0 ? '(success)' : '(error)'}}</span>
+            <span class="input-group-addon">
+              <span class="fa fa-refresh" ng-click="refreshContainers()" ng-class="{'fa-spin': containers.loading}"></span>
+            </span>
+          </div>
+          <span ng-show="containers.cart.length == 0" class="help-block">At least one container must be selected</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-1 col-sm-6">
+          <button class="btn btn-primary pull-right" ng-disabled="profiles.cart.length == 0 || containers.cart.length == 0 || containers.loading || saving()" ng-click="assignProfiles()"><i class="fa fa-cloud-upload"></i> Assign</button>
+        </div>
+      </div>
+    </form>
   </div>
 
-  <h2>Containers <i ng-show="loading()" class="fa fa-spinner fa-spin"></i> <span class="badge" ng-show="containers.length > 0">{{containers.length}}</span></h2>
+  <h2>Containers <i ng-show="containers.loading" class="fa fa-spinner fa-spin"></i> <span class="badge" ng-show="containers.cart.length > 0">{{containers.cart.length}}</span></h2>
 
   <div class="row" block-ui="blockTable">
     <div ng-include="'plugins/profiles/html/containerList.html'"></div>

@@ -4,20 +4,18 @@
 
 module Profiles {
 
-  module.controller('Profiles.AssignProfilesController', ['$scope', '$location', '$templateCache', 'profiles', 'containers', 'blockUI', ($scope, $location, $templateCache, profiles:Profiles, containers:Containers, blockUI) => {
+  module.controller('Profiles.AssignProfilesController', ['$scope', '$location', '$templateCache', 'profiles', 'containers', 'blockUI', ($scope, $location, $templateCache, profiles: Profiles, containers: Containers, blockUI) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
     // Associate this controller scope to the ForgeProjectService
     Forge.updateForgeProject($scope);
+    SelectionHelpers.decorate($scope);
 
-    $scope.profiles = profiles.cart;
-    $scope.containers = containers.cart;
+    $scope.profiles = profiles;
+    $scope.containers = containers;
     $scope.selectable = true;
-    $scope.loading = () => containers.loading;
 
     let saving:number = 0;
     $scope.saving = () => saving > 0;
-
-    SelectionHelpers.decorate($scope);
 
     let blockTable = blockUI.instances.get('blockTable');
 
@@ -48,14 +46,15 @@ module Profiles {
       });
     };
 
-    let assignProfiles = (container:Container, profiles:Profile[]):string =>
+    let assignProfiles = (container: Container, profiles: Profile[]):string =>
         container.text.replace(/^(profiles)=(.*)$/m,
             (match, key, value) => key + '=' + profiles.map(profile => profile.id).join(' '));
 
-    $scope.refresh = () => containers.load(new Wiki.GitWikiRepository($scope), $scope.branch);
+    $scope.refreshContainers = () => containers.load(new Wiki.GitWikiRepository($scope), $scope.branch);
+    $scope.refreshProfiles = () => profiles.load(new Wiki.GitWikiRepository($scope), $scope.branch);
 
     if (!(containers.loaded || containers.loading)) {
-      $scope.refresh();
+      $scope.refreshContainers();
     }
   }])
 }

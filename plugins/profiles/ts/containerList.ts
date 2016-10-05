@@ -12,10 +12,10 @@ module Profiles {
 
     $scope.viewProfile = profile => $location.path(Wiki.viewLink($scope.projectId, $scope.branch, profile.path, $location));
     $scope.profiles = profiles;
-    $scope.containers = containers.data;
+    $scope.containers = containers;
 
     $scope.tableConfig = {
-      data: 'containers',
+      data: 'containers.data',
       showSelectionCheckbox: $scope.selectable || false,
       enableRowClickSelection: $scope.selectable || false,
       multiSelect: true,
@@ -44,7 +44,7 @@ module Profiles {
     };
 
     $scope.$watchCollection('profiles.data', profiles =>
-      $scope.containers.forEach((container:Container) =>
+      containers.data.forEach((container:Container) =>
         profiles.forEach((profile:Profile) => {
           let i = _.indexOf(container.profiles, profile.id);
           if (i >= 0) {
@@ -55,7 +55,7 @@ module Profiles {
     );
 
     $scope.$on('kubernetesModelUpdated', () =>
-      _.filter($scope.containers, (container:Container) => !container.rc)
+      _.filter(containers.data, (container:Container) => !container.rc)
         .forEach((container:Container) => container.rc = kubernetes.getReplicationController($scope.namespace || Kubernetes.currentKubernetesNamespace(), container.name)));
 
     if (!(containers.loaded || containers.loading)) {

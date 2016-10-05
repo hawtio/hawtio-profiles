@@ -4,7 +4,7 @@
 
 module Profiles {
 
-  module.controller('Profiles.DeployProfilesController', ['$scope', '$location', '$templateCache', 'profiles', 'containers', 'blockUI', ($scope, $location, $templateCache, profiles:Profiles, containers:Containers, blockUI) => {
+  module.controller('Profiles.DeployProfilesController', ['$scope', '$location', '$templateCache', 'profiles', 'containers', 'blockUI', ($scope, $location, $templateCache, profiles: Profiles, containers: Containers, blockUI) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
     // Associate this controller scope to the ForgeProjectService
     Forge.updateForgeProject($scope);
@@ -12,12 +12,9 @@ module Profiles {
     $scope.profiles = profiles;
     $scope.containerName = '';
     $scope.selectable = false;
-    $scope.loading = () => containers.loading;
 
     let saving:number = 0;
     $scope.saving = () => saving > 0;
-
-    SelectionHelpers.decorate($scope);
 
     let blockTable = blockUI.instances.get('blockTable');
 
@@ -46,17 +43,16 @@ module Profiles {
       wiki.putPage($scope.branch, 'configs/containers/' + $scope.containerName + '.cfg', deployProfiles($scope.containerName, profiles.cart), 'Deploy profiles into ' + $scope.containerName, success, failure);
     };
 
-    let deployProfiles = (container: string, profiles:Profile[]):string =>
+    let deployProfiles = (container: string, profiles: Profile[]):string =>
         profiles.reduce((profiles: string, profile: Profile) => profiles + profile.id + ' ', 'profiles=')
           .concat('\n')
           .concat('container-type=karaf jenkinsfile');
 
-    $scope.refresh = () => containers.load(new Wiki.GitWikiRepository($scope), $scope.branch);
-
+    $scope.refreshContainers = () => containers.load(new Wiki.GitWikiRepository($scope), $scope.branch);
     $scope.refreshProfiles = () => profiles.load(new Wiki.GitWikiRepository($scope), $scope.branch);
 
     if (!(containers.loaded || containers.loading)) {
-      $scope.refresh();
+      $scope.refreshContainers();
     }
   }])
 }

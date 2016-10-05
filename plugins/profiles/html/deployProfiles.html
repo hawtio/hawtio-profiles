@@ -42,13 +42,13 @@
       </div>
       <div class="form-group">
         <div class="col-sm-offset-1 col-sm-6">
-          <button class="btn btn-primary pull-right" ng-disabled="profiles.length == 0 || containers.length == 0 || loading() || saving()" ng-click="assignProfiles()"><i class="fa fa-cloud-upload"></i> Deploy</button>
+          <button class="btn btn-primary pull-right" ng-disabled="profiles.cart.length == 0 || containerName.length == 0 || containers.loading || saving()" ng-click="deployProfiles()"><i class="fa fa-cloud-upload"></i> Deploy</button>
         </div>
       </div>
     </form>
   </div>
 
-  <h2>Existing containers <i ng-show="loading()" class="fa fa-spinner fa-spin"></i> <span class="badge" ng-show="containers.length > 0">{{containers.length}}</span></h2>
+  <h2>Existing containers <i ng-show="containers.loading" class="fa fa-spinner fa-spin"></i> <span class="badge" ng-show="containers.data.length > 0">{{containers.data.length}}</span></h2>
 
   <div class="row" block-ui="blockTable">
     <div ng-include="'plugins/profiles/html/containerList.html'"></div>

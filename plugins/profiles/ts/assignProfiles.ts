@@ -8,7 +8,6 @@ module Profiles {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
     // Associate this controller scope to the ForgeProjectService
     Forge.updateForgeProject($scope);
-    SelectionHelpers.decorate($scope);
 
     $scope.profiles = profiles;
     $scope.containers = containers;

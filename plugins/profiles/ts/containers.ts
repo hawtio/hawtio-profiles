@@ -103,35 +103,13 @@ module Profiles {
 
   module.service('containers', ['profiles', 'KubernetesModel', Containers]);
 
-  module.controller('Profiles.ContainersController',
-      ['$scope', 'containers', 'profiles', 'KubernetesModel',
-        ($scope, containers:Containers, profiles:Profiles, kubernetes:KubernetesModelService) => {
+  module.controller('Profiles.ContainersController', ['$scope', 'containers', 'profiles', ($scope, containers: Containers) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
     // Associate this controller scope to the ForgeProjectService
     Forge.updateForgeProject($scope);
 
     $scope.containers = containers.data;
-    $scope.profiles = profiles.data;
     $scope.loading = () => containers.loading;
     $scope.refresh = () => containers.load(new Wiki.GitWikiRepository($scope), $scope.branch, $scope.namespace);
-
-    $scope.$watchCollection('profiles', profiles =>
-      $scope.containers.forEach((container:Container) =>
-        profiles.forEach((profile:Profile) => {
-          let i = _.indexOf(container.profiles, profile.id);
-          if (i >= 0) {
-            container.profiles[i] = profile;
-          }
-        })
-      )
-    );
-
-    $scope.$on('kubernetesModelUpdated', () =>_.filter($scope.containers, (container:Container) => !container.rc)
-      .forEach((container:Container) =>
-        container.rc = kubernetes.getReplicationController($scope.namespace || Kubernetes.currentKubernetesNamespace(), container.name)));
-
-    if (!(containers.loaded || containers.loading)) {
-      $scope.refresh();
-    }
   }])
 }

@@ -4,7 +4,11 @@
 
 module Profiles {
 
-  module.controller('Profiles.ContainerListController', ['$scope', '$location', '$templateCache', 'profiles', 'containers', ($scope, $location, $templateCache, profiles:Profiles, containers:Containers) => {
+  import KubernetesModelService = Kubernetes.KubernetesModelService;
+
+  module.controller('Profiles.ContainerListController',
+    ['$scope', '$location', '$templateCache', 'profiles', 'containers', 'KubernetesModel',
+      ($scope, $location, $templateCache, profiles: Profiles, containers: Containers, kubernetes: KubernetesModelService) => {
 
     $scope.viewProfile = profile => $location.path(Wiki.viewLink($scope.projectId, $scope.branch, profile.path, $location));
     $scope.profiles = profiles;
@@ -38,6 +42,25 @@ module Profiles {
         }
       ]
     };
+
+    $scope.$watchCollection('profiles.data', profiles =>
+      $scope.containers.forEach((container:Container) =>
+        profiles.forEach((profile:Profile) => {
+          let i = _.indexOf(container.profiles, profile.id);
+          if (i >= 0) {
+            container.profiles[i] = profile;
+          }
+        })
+      )
+    );
+
+    $scope.$on('kubernetesModelUpdated', () =>
+      _.filter($scope.containers, (container:Container) => !container.rc)
+        .forEach((container:Container) => container.rc = kubernetes.getReplicationController($scope.namespace || Kubernetes.currentKubernetesNamespace(), container.name)));
+
+    if (!(containers.loaded || containers.loading)) {
+      $scope.refresh();
+    }
   }]);
 
   module.filter('kubernetesPageLink', () => (entity, path1, path2) => UrlHelpers.join(Kubernetes.entityPageLink(entity), path1, path2));

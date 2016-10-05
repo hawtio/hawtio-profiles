@@ -9,7 +9,7 @@ module Profiles {
     // Associate this controller scope to the ForgeProjectService
     Forge.updateForgeProject($scope);
 
-    $scope.profiles = profiles.cart;
+    $scope.profiles = profiles;
     $scope.containerName = '';
     $scope.selectable = false;
     $scope.loading = () => containers.loading;
@@ -52,6 +52,8 @@ module Profiles {
           .concat('container-type=karaf jenkinsfile');
 
     $scope.refresh = () => containers.load(new Wiki.GitWikiRepository($scope), $scope.branch);
+
+    $scope.refreshProfiles = () => profiles.load(new Wiki.GitWikiRepository($scope), $scope.branch);
 
     if (!(containers.loaded || containers.loading)) {
       $scope.refresh();

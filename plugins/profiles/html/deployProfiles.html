@@ -7,28 +7,48 @@
   <h2>Deploy profiles into a new container</h2>
 
   <div class="row">
-    <div ng-show="profiles.length > 0">
-      <ul class="plain-list">
-        Deploy the
-        <li class="inline-block" ng-repeat="profile in profiles">
-          <button type="button" class="btn btn-success btn-xs"
-                  ng-click="toggleSelectionFromGroup(profiles, profile)">
-            {{profile.id}} <i class="glyphicon glyphicon-remove" aria-hidden="true"></i>
-          </button><span ng-if="$index < profiles.length - 2">,&nbsp;</span><span ng-if="$index === profiles.length - 2"> and&nbsp;</span>
-        </li>
-        <ng-pluralize count="profiles.length" when="{'one': 'profile', 'other': 'profiles'}"></ng-pluralize> into the container:
-        <input type="text" class="form-control" ng-model="containerName" placeholder="container name">
-      </ul>
-    </div>
-    <div ng-hide="profiles.length > 0" class="text-muted">
-      No profiles selected. Please go to the profiles tab and select some profiles.
-    </div>
-    <div class="pull-right">
-      <button class="btn btn-primary" ng-disabled="profiles.length == 0 || containerName.length == 0 || loading() || saving()" ng-click="deployProfiles()"><i class="fa fa-cloud-upload"></i> Deploy</button>
-    </div>
+    <form class="form-horizontal">
+      <div class="form-group has-feedback" ng-class="profiles.cart.length > 0 ? 'has-success' : 'has-error'">
+        <label class="control-label col-sm-1">Profiles</label>
+        <div class="col-sm-6">
+          <div class="input-group">
+            <ui-select multiple sortable="true" ng-model="profiles.cart" theme="bootstrap" aria-describedby="selectProfilesStatus">
+              <ui-select-match placeholder="Select profiles...">{{$item.name}}</ui-select-match>
+              <ui-select-choices repeat="profile in (profiles.data | filter: $select.search) track by profile.id">
+                <div ng-bind-html="profile.id | highlight: $select.search"></div>
+                <small>(<span ng-bind-html="profile.name | highlight: $select.search"></span>)</small>
+              </ui-select-choices>
+              <ui-select-no-choice>
+                No profile is available! Click on the refresh button
+              </ui-select-no-choice>
+            </ui-select>
+            <span class="glyphicon form-control-feedback" ng-class="profiles.cart.length > 0 ? 'glyphicon-ok' : 'glyphicon-remove'" aria-hidden="true"></span>
+            <span id="selectProfilesStatus" class="sr-only">{{profiles.cart.length > 0 ? '(success)' : '(error)'}}</span>
+            <span class="input-group-addon">
+              <span class="fa fa-refresh" ng-click="refreshProfiles()" ng-class="{'fa-spin': profiles.loading}"></span>
+            </span>
+          </div>
+          <span ng-show="profiles.cart.length == 0" class="help-block">At least one profile is required</span>
+        </div>
+      </div>
+      <div class="form-group has-feedback"  ng-class="containerName.length > 0 ? 'has-success' : 'has-error'">
+        <label class="control-label col-sm-1" for="containerName">Name</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" ng-model="containerName" id="containerName" aria-describedby="containerNameStatus">
+          <span class="glyphicon form-control-feedback" ng-class="containerName.length > 0 ? 'glyphicon-ok' : 'glyphicon-remove'" aria-hidden="true"></span>
+          <span id="containerNameStatus" class="sr-only">{{containerName.length > 0 ? '(success)' : '(error)'}}</span>
+          <span ng-show="containerName.length == 0" class="help-block">The container name cannot be empty</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-offset-1 col-sm-6">
+          <button class="btn btn-primary pull-right" ng-disabled="profiles.length == 0 || containers.length == 0 || loading() || saving()" ng-click="assignProfiles()"><i class="fa fa-cloud-upload"></i> Deploy</button>
+        </div>
+      </div>
+    </form>
   </div>
 
-  <h2>Containers <i ng-show="loading()" class="fa fa-spinner fa-spin"></i> <span class="badge" ng-show="containers.length > 0">{{containers.length}}</span></h2>
+  <h2>Existing containers <i ng-show="loading()" class="fa fa-spinner fa-spin"></i> <span class="badge" ng-show="containers.length > 0">{{containers.length}}</span></h2>
 
   <div class="row" block-ui="blockTable">
     <div ng-include="'plugins/profiles/html/containerList.html'"></div>

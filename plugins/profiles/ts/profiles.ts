@@ -22,7 +22,7 @@ module Profiles {
     cart:Profile[] = [];
     private requests:number = 0;
 
-    load = (wiki:Wiki.GitWikiRepository, branch:string, path:string):void => {
+    load = (wiki:Wiki.GitWikiRepository, branch:string, path:string = 'profiles'):void => {
       this.loading = true;
       this.data.length = 0;
       this.requests = 0;
@@ -203,7 +203,7 @@ module Profiles {
     $scope.refresh = () => {
       _.keys($scope.profileViews).forEach(key => delete $scope.profileViews[key]);
       $scope.$watchCollection('profiles', updateProfileViews);
-      profiles.load(wiki, $scope.branch, 'profiles');
+      profiles.load(wiki, $scope.branch);
     };
 
     if (!(profiles.loaded || profiles.loading)) {

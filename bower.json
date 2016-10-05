@@ -30,7 +30,8 @@
     "hawtio-kubernetes-api": "~2.0.46",
     "hawtio-kubernetes": "~2.1.278",
     "fabric8-console": "https://github.com/fabric8io/fabric8-console.git#281f452",
-    "angular-block-ui": "~0.2.2"
+    "angular-block-ui": "~0.2.2",
+    "angular-ui-select": "~0.19.4"
   },
   "devDependencies": {
     "hawtio-core-dts": "~2.0.29"

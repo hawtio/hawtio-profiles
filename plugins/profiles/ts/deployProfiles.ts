@@ -34,9 +34,10 @@ module Profiles {
       let complete = () => {
         if (--saving === 0) {
           blockTable.message('Refreshing ...');
-          containers.load(wiki, $scope.branch);
-          blockTable.stop();
-          $location.path(UrlHelpers.join('/workspaces', $scope.namespace, 'projects', $scope.projectId, 'profiles', 'containers'));
+          containers.load(wiki, $scope.branch).then(() => {
+            blockTable.stop();
+            $location.path(UrlHelpers.join('/workspaces', $scope.namespace, 'projects', $scope.projectId, 'profiles', 'containers'));
+          });
         }
       };
       blockTable.start("Saving ...");

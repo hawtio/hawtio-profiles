@@ -3,6 +3,7 @@
 /// <reference path="profilesHelpers.d.ts" />
 declare module Profiles {
     import KubernetesModelService = Kubernetes.KubernetesModelService;
+    import IPromise = angular.IPromise;
     interface Icon {
         title: string;
         type: string;
@@ -25,8 +26,9 @@ declare module Profiles {
         cart: Container[];
         private profiles;
         private kubernetes;
-        constructor(profiles: Profiles, kubernetes: KubernetesModelService);
-        load: (wiki: Wiki.GitWikiRepository, branch: string, namespace?: string) => void;
+        private $q;
+        constructor(profiles: Profiles, kubernetes: KubernetesModelService, $q: ng.IQService);
+        load: (wiki: Wiki.GitWikiRepository, branch: string, namespace?: string) => IPromise<void>;
         private complete;
     }
 }

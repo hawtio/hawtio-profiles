@@ -5,6 +5,8 @@
 module Profiles {
 
   import KubernetesModelService = Kubernetes.KubernetesModelService;
+  import IDeferred = angular.IDeferred;
+  import IPromise = angular.IPromise;
 
   export interface Icon {
     title: string;
@@ -36,16 +38,19 @@ module Profiles {
     cart:Container[] = [];
     private profiles:Profiles;
     private kubernetes:KubernetesModelService;
+    private $q:ng.IQService;
 
-    constructor(profiles:Profiles, kubernetes:KubernetesModelService) {
+    constructor(profiles: Profiles, kubernetes: KubernetesModelService, $q: ng.IQService) {
       this.profiles = profiles;
       this.kubernetes = kubernetes;
+      this.$q = $q;
     }
 
-    load = (wiki:Wiki.GitWikiRepository, branch:string, namespace?:string):void => {
+    load = (wiki:Wiki.GitWikiRepository, branch:string, namespace?:string):IPromise<void> => {
       this.loading = true;
       this.requests++;
       let data:Container[] = [];
+      let deferred = this.$q.defer<void>();
       // Lets list all the containers, and load the container configs
       wiki.getPage(branch, 'configs/containers', null, page => {
         _.forEach(page.children, child => {
@@ -88,7 +93,9 @@ module Profiles {
           }
         });
         this.complete(data);
+        deferred.resolve();
       });
+      return deferred.promise;
     };
 
     private complete = (data:Container[]):void => {
@@ -101,7 +108,7 @@ module Profiles {
     };
   }
 
-  module.service('containers', ['profiles', 'KubernetesModel', Containers]);
+  module.service('containers', ['profiles', 'KubernetesModel', '$q', Containers]);
 
   module.controller('Profiles.ContainersController', ['$scope', 'containers', 'profiles', ($scope, containers: Containers) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);

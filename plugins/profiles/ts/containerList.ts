@@ -54,6 +54,12 @@ module Profiles {
       )
     );
 
+    // Necessary sync as ui-select changes the selection array reference :(
+    $scope.$watch('containers.cart', containers => {
+      $scope.tableConfig.selectedItems = containers;
+      $scope.$broadcast('hawtio.datatable.containers.data');
+    });
+
     $scope.$on('kubernetesModelUpdated', () =>
       _.filter(containers.data, (container:Container) => !container.rc)
         .forEach((container:Container) => container.rc = kubernetes.getReplicationController($scope.namespace || Kubernetes.currentKubernetesNamespace(), container.name)));

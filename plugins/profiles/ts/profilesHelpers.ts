@@ -35,4 +35,15 @@ module Profiles {
       return properties;
     }, {});
   }
+
+  export function gitRestUrl($scope, path: string, branch?: string):string {
+    return Forge.createHttpUrl($scope.projectId,
+      new URI(Kubernetes.inject<string>("ForgeApiURL"))
+        .segment('repos/project')
+        .segment($scope.namespace || Kubernetes.currentKubernetesNamespace())
+        .segment($scope.projectId)
+        .segment('raw')
+        .segment(path)
+        .toString()) + '?branch=' + (branch || $scope.branch || 'master');
+  }
 }

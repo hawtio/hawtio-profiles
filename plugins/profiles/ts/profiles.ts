@@ -134,6 +134,7 @@ module Profiles {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
     // Associate this controller scope to the ForgeProjectService
     Forge.updateForgeProject($scope);
+    $scope.gitRestUrl = path => gitRestUrl($scope, path);
 
     $scope.profiles = profiles.data;
     $scope.selection = profiles.cart;
@@ -148,15 +149,6 @@ module Profiles {
 
     let wiki = new Wiki.GitWikiRepository($scope);
 
-    $scope.rawForgeUrl = (path: string) => Forge.createHttpUrl($scope.projectId,
-      new URI(Kubernetes.inject<string>("ForgeApiURL"))
-        .segment('repos/project')
-        .segment($scope.namespace || Kubernetes.currentKubernetesNamespace())
-        .segment($scope.projectId)
-        .segment('raw')
-        .segment(path)
-        .toString());
-
     $scope.loadSummary = (profile: Profile) => {
       if (profile.summaryUrl) {
         let renderer = new marked.Renderer();
@@ -170,7 +162,7 @@ module Profiles {
               uri = uri.absoluteTo(UrlHelpers.join(profile.path, '/'));
             }
             // Get the image URL for the Forge REST API
-            let src = $scope.rawForgeUrl(uri.normalize().toString());
+            let src = gitRestUrl($scope, uri.normalize().toString());
             // and use URL.createObjectURL via angular-img-http-src to get an URL for the image BLOB
             // TODO: display a spinner while the image is loading
             return '<img http-src="' + src + '" alt="' + (title ? title : text) + '" />';

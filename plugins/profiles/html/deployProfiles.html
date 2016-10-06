@@ -15,8 +15,13 @@
             <ui-select multiple sortable="true" ng-model="profiles.cart" theme="bootstrap" aria-describedby="selectProfilesStatus">
               <ui-select-match placeholder="Select profiles...">{{$item.name}}</ui-select-match>
               <ui-select-choices repeat="profile in (profiles.data | filter: $select.search) track by profile.id">
-                <div ng-bind-html="profile.id | highlight: $select.search"></div>
-                <small>(<span ng-bind-html="profile.name | highlight: $select.search"></span>)</small>
+                <img ng-if="profile.iconUrl"
+                     class="profile-logo" style="max-width:32px; max-height: 32px"
+                     http-src="{{gitRestUrl(profile.iconUrl)}}" media-type="image/svg+xml" />
+                <img ng-if="!profile.iconUrl"
+                     class="profile-logo" style="max-width:32px; max-height: 32px"
+                     src="img/fabric8_icon.svg" />
+                <span ng-bind-html="profile.id | highlight: $select.search"></span>
               </ui-select-choices>
               <ui-select-no-choice>
                 No profile is available! Click on the refresh button

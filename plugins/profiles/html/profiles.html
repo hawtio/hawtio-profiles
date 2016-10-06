@@ -8,7 +8,10 @@
     <i class="fa fa-refresh" ng-class="{'fa-spin': loading()}"></i> Refresh
   </button>
 
-  <h2 class="inline-block">Profiles <i ng-show="loading()" class="fa fa-spinner fa-spin"></i> <span class="badge" ng-show="profiles.length > 0">{{selectedTags.length > 0 || !isBlank(searchFilter) ? (filteredProfiles = (profiles | selectedTags:'tags':selectedTags | filterCollection:searchFilter)).length + ' / ' + profiles.length : (filteredProfiles = profiles).length}}</span>
+  <h2 class="inline-block">
+    Profiles
+    <i ng-show="loading()" class="fa fa-refresh fa-spin"></i>
+    <span class="badge" ng-show="profiles.length > 0">{{selectedTags.length > 0 || !isBlank(searchFilter) ? (filteredProfiles = (profiles | selectedTags:'tags':selectedTags | filterCollection:searchFilter)).length + ' / ' + profiles.length : (filteredProfiles = profiles).length}}</span>
     <hawtio-filter ng-model="searchFilter"
                    css-class="search-input"
                    placeholder="Search..."

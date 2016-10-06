@@ -10,6 +10,7 @@ module Profiles {
     Forge.updateForgeProject($scope);
 
     $scope.profiles = profiles;
+    $scope.containers = containers;
     $scope.containerName = '';
     $scope.selectable = false;
 

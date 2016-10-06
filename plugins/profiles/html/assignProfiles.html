@@ -61,7 +61,7 @@
     </form>
   </div>
 
-  <h2>Containers <i ng-show="containers.loading" class="fa fa-refresh fa-spin"></i> <span class="badge" ng-show="containers.cart.length > 0">{{containers.cart.length}}</span></h2>
+  <h2>Containers <i ng-show="containers.loading" class="fa fa-refresh fa-spin"></i> <span class="badge">{{containers.cart.length + '/' + containers.data.length}}</span></h2>
 
   <div class="row" block-ui="blockTable">
     <div ng-include="'plugins/profiles/html/containerList.html'"></div>

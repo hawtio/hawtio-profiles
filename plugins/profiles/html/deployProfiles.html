@@ -48,7 +48,7 @@
     </form>
   </div>
 
-  <h2>Existing containers <i ng-show="containers.loading" class="fa fa-refresh fa-spin"></i> <span class="badge" ng-show="containers.data.length > 0">{{containers.data.length}}</span></h2>
+  <h2>Existing containers <i ng-show="containers.loading" class="fa fa-refresh fa-spin"></i> <span class="badge">{{containers.data.length}}</span></h2>
 
   <div class="row" block-ui="blockTable">
     <div ng-include="'plugins/profiles/html/containerList.html'"></div>

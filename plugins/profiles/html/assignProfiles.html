@@ -4,13 +4,13 @@
     <div template-cache-include="plugins/kubernetes/html/tabs.html"></div>
   </div>
 
-  <h2>Assign profiles to containers</h2>
+  <h2>Assign profiles to container(s)</h2>
 
   <div class="row">
     <form class="form-horizontal">
       <div class="form-group has-feedback" ng-class="profiles.cart.length > 0 ? 'has-success' : 'has-error'">
-        <label class="control-label col-sm-1">Profiles</label>
-        <div class="col-sm-6">
+        <label class="control-label col-sm-2">Profile(s)</label>
+        <div class="col-sm-9">
           <div class="input-group">
             <ui-select multiple sortable="true" ng-model="profiles.cart" theme="bootstrap" aria-describedby="selectProfilesStatus">
               <ui-select-match placeholder="Select profiles...">{{$item.name}}</ui-select-match>
@@ -32,8 +32,8 @@
         </div>
       </div>
       <div class="form-group has-feedback" ng-class="containers.cart.length > 0 ? 'has-success' : 'has-error'">
-        <label class="control-label col-sm-1">Containers</label>
-        <div class="col-sm-6">
+        <label class="control-label col-sm-2">Container(s)</label>
+        <div class="col-sm-9">
           <div class="input-group">
             <ui-select multiple sortable="true" ng-model="containers.cart" theme="bootstrap" aria-describedby="selectContainersStatus">
               <ui-select-match placeholder="Select containers...">{{$item.name}}</ui-select-match>
@@ -54,7 +54,7 @@
         </div>
       </div>
       <div class="form-group">
-        <div class="col-sm-offset-1 col-sm-6">
+        <div class="col-sm-offset-2 col-sm-9">
           <button class="btn btn-primary pull-right" ng-disabled="profiles.cart.length == 0 || containers.cart.length == 0 || containers.loading || saving()" ng-click="assignProfiles()"><i class="fa fa-cloud-upload"></i> Assign</button>
         </div>
       </div>

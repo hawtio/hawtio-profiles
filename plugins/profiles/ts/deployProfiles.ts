@@ -11,7 +11,9 @@ module Profiles {
 
     $scope.profiles = profiles;
     $scope.containers = containers;
-    $scope.containerName = '';
+    $scope.select = {
+      names: []
+    };
     $scope.selectable = false;
 
     let saving:number = 0;
@@ -42,7 +44,8 @@ module Profiles {
       };
       blockTable.start("Saving ...");
       saving++;
-      wiki.putPage($scope.branch, 'configs/containers/' + $scope.containerName + '.cfg', deployProfiles($scope.containerName, profiles.cart), 'Deploy profiles into ' + $scope.containerName, success, failure);
+      $scope.select.names.forEach(name =>
+        wiki.putPage($scope.branch, 'configs/containers/' + name + '.cfg', deployProfiles(name, profiles.cart), 'Deploy profiles into ' + name, success, failure));
     };
 
     let deployProfiles = (container: string, profiles: Profile[]):string =>

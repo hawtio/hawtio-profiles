@@ -4,12 +4,12 @@
     <div template-cache-include="plugins/kubernetes/html/tabs.html"></div>
   </div>
 
-  <h2>Deploy profiles into a new container</h2>
+  <h2>Deploy profiles into new container(s)</h2>
 
   <div class="row">
     <form class="form-horizontal">
       <div class="form-group has-feedback" ng-class="profiles.cart.length > 0 ? 'has-success' : 'has-error'">
-        <label class="control-label col-sm-1">Profiles</label>
+        <label class="control-label col-sm-1">Profile(s)</label>
         <div class="col-sm-6">
           <div class="input-group">
             <ui-select multiple sortable="true" ng-model="profiles.cart" theme="bootstrap" aria-describedby="selectProfilesStatus">
@@ -31,18 +31,21 @@
           <span ng-show="profiles.cart.length == 0" class="help-block">At least one profile is required</span>
         </div>
       </div>
-      <div class="form-group has-feedback"  ng-class="containerName.length > 0 ? 'has-success' : 'has-error'">
-        <label class="control-label col-sm-1" for="containerName">Name</label>
-        <div class="col-sm-4">
-          <input type="text" class="form-control" ng-model="containerName" id="containerName" aria-describedby="containerNameStatus">
-          <span class="glyphicon form-control-feedback" ng-class="containerName.length > 0 ? 'glyphicon-ok' : 'glyphicon-remove'" aria-hidden="true"></span>
-          <span id="containerNameStatus" class="sr-only">{{containerName.length > 0 ? '(success)' : '(error)'}}</span>
-          <span ng-show="containerName.length == 0" class="help-block">The container name cannot be empty</span>
+      <div class="form-group has-feedback"  ng-class="select.names.length > 0 ? 'has-success' : 'has-error'">
+        <label class="control-label col-sm-1">Name(s)</label>
+        <div class="col-sm-6">
+            <ui-select multiple tagging tagging-label="false" tagging-tokens="ENTER|SPACE" ng-model="select.names" theme="bootstrap" aria-describedby="selectNamesStatus">
+              <ui-select-match placeholder="Enter names...">{{$item}}</ui-select-match>
+              <ui-select-choices repeat="item in []"></ui-select-choices>
+            </ui-select>
+            <span class="glyphicon form-control-feedback" ng-class="select.names.length > 0 ? 'glyphicon-ok' : 'glyphicon-remove'" aria-hidden="true"></span>
+            <span id="selectNamesStatus" class="sr-only">{{select.names.length > 0 ? '(success)' : '(error)'}}</span>
+          <span ng-show="select.names.length == 0" class="help-block">At least one container name is required</span>
         </div>
       </div>
       <div class="form-group">
         <div class="col-sm-offset-1 col-sm-6">
-          <button class="btn btn-primary pull-right" ng-disabled="profiles.cart.length == 0 || containerName.length == 0 || containers.loading || saving()" ng-click="deployProfiles()"><i class="fa fa-cloud-upload"></i> Deploy</button>
+          <button class="btn btn-primary pull-right" ng-disabled="profiles.cart.length == 0 || select.names.length == 0 || containers.loading || saving()" ng-click="deployProfiles()"><i class="fa fa-cloud-upload"></i> Deploy</button>
         </div>
       </div>
     </form>

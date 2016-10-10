@@ -52,7 +52,11 @@ module Profiles {
             (match, key, value) => key + '=' + profiles.map(profile => profile.id).join(' '));
 
     $scope.refreshContainers = () => containers.load(new Wiki.GitWikiRepository($scope), $scope.branch);
-    $scope.refreshProfiles = () => profiles.load(new Wiki.GitWikiRepository($scope), $scope.branch);
+    $scope.refreshProfiles = () => {
+      if (!profiles.loading) {
+        profiles.load(new Wiki.GitWikiRepository($scope), $scope.branch);
+      }
+    };
 
     if (!(containers.loaded || containers.loading)) {
       $scope.refreshContainers();

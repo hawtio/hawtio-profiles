@@ -24,7 +24,7 @@
                 <span ng-bind-html="profile.id | highlight: $select.search"></span>
               </ui-select-choices>
               <ui-select-no-choice>
-                No profile is available! Click on the refresh button
+                <a ng-click="refreshProfiles()">No profile is available. Click to refresh available profiles.</a>
               </ui-select-no-choice>
             </ui-select>
             <span class="glyphicon form-control-feedback" ng-class="profiles.cart.length > 0 ? 'glyphicon-ok' : 'glyphicon-remove'" aria-hidden="true"></span>

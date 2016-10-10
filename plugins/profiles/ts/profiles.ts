@@ -98,7 +98,7 @@ module Profiles {
     get openOrSingle():boolean {
       let scope = this.scope;
       if (scope.filteredProfiles.length === 1) {
-        if (!this.force && (!scope.loading || scope.profiles.length > 1)) {
+        if (!this.force && (!scope.loading() || scope.profiles.length > 1)) {
           return true;
         }
       } else {
@@ -192,16 +192,13 @@ module Profiles {
       return profileViews;
     }, $scope.profileViews);
 
-    $scope.refresh = () => {
-      _.keys($scope.profileViews).forEach(key => delete $scope.profileViews[key]);
-      $scope.$watchCollection('profiles', updateProfileViews);
-      profiles.load(wiki, $scope.branch);
-    };
+    _.keys($scope.profileViews).forEach(key => delete $scope.profileViews[key]);
+    $scope.$watchCollection('profiles', updateProfileViews);
+
+    $scope.refresh = () => profiles.load(wiki, $scope.branch);
 
     if (!(profiles.loaded || profiles.loading)) {
       $scope.refresh();
-    } else {
-      updateProfileViews($scope.profiles);
     }
   }])
 }

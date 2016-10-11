@@ -36,16 +36,20 @@
           <span ng-show="profiles.cart.length == 0" class="help-block">At least one profile is required</span>
         </div>
       </div>
-      <div class="form-group has-feedback" ng-class="select.names.length > 0 ? 'has-success' : 'has-error'">
+      <div class="form-group has-feedback" ng-class="(status = select.names.length > 0 ? ((existing = existingContainers(select.names)).length > 0 ? 'has-warning' : 'has-success') : 'has-error')">
         <label class="control-label col-sm-2">Name(s)</label>
         <div class="col-sm-9">
-            <ui-select multiple tagging tagging-label="false" tagging-tokens="ENTER|SPACE" ng-model="select.names" theme="bootstrap" aria-describedby="selectNamesStatus">
-              <ui-select-match placeholder="Enter names...">{{$item}}</ui-select-match>
-              <ui-select-choices repeat="item in []"></ui-select-choices>
-            </ui-select>
-            <span class="glyphicon form-control-feedback" ng-class="select.names.length > 0 ? 'glyphicon-ok' : 'glyphicon-remove'" aria-hidden="true"></span>
-            <span id="selectNamesStatus" class="sr-only">{{select.names.length > 0 ? '(success)' : '(error)'}}</span>
+          <ui-select multiple tagging tagging-label="false" tagging-tokens="ENTER|SPACE" ng-model="select.names" theme="bootstrap" aria-describedby="selectNamesStatus">
+            <ui-select-match placeholder="Enter names...">
+              <span ng-if="existing.indexOf($item) >= 0" class="glyphicon glyphicon-alert" ng-class="{'text-warning': $selectMultiple.activeMatchIndex !== $index}" aria-hidden="true"></span>
+              <span ng-class="{'text-warning': existing.indexOf($item) >= 0 && $selectMultiple.activeMatchIndex !== $index}">{{$item}}</span>
+            </ui-select-match>
+            <ui-select-choices repeat="item in []"></ui-select-choices>
+          </ui-select>
+          <span class="glyphicon form-control-feedback" ng-class="select.names.length > 0 ? (existing.length > 0 ? 'glyphicon-warning-sign' : 'glyphicon-ok') : 'glyphicon-remove'" aria-hidden="true"></span>
+          <span id="selectNamesStatus" class="sr-only">{{select.names.length > 0 ? '(success)' : '(error)'}}</span>
           <span ng-show="select.names.length == 0" class="help-block">At least one container name is required</span>
+          <span ng-show="select.names.length != 0 && existing.length > 0" class="help-block">Some container profiles will be overwritten</span>
         </div>
       </div>
       <div class="form-group">

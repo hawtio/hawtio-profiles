@@ -54,6 +54,8 @@ module Profiles {
           .concat('\n')
           .concat('container-type=karaf jenkinsfile');
 
+    $scope.existingContainers = names => _.intersection(names, _.pluck(containers.data, 'name'));
+
     $scope.refreshContainers = () => containers.load(new Wiki.GitWikiRepository($scope), $scope.branch);
     $scope.refreshProfiles = () => {
       if (!profiles.loading) {

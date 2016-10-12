@@ -110,12 +110,53 @@ module Profiles {
 
   module.service('containers', ['profiles', 'KubernetesModel', '$q', Containers]);
 
-  module.controller('Profiles.ContainersController', ['$scope', 'containers', 'profiles', ($scope, containers: Containers) => {
+  module.controller('Profiles.ContainersController',
+    ['$scope', '$location', 'containers', 'blockUI',
+      ($scope, $location, containers: Containers, blockUI) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
     // Associate this controller scope to the ForgeProjectService
     Forge.updateForgeProject($scope);
 
-    $scope.containers = containers.data;
+    $scope.containers = containers;
+    $scope.selectable = true;
+
+    let saving:number = 0;
+    $scope.saving = () => saving > 0;
+
+    let blockTable = blockUI.instances.get('blockTable');
+
+    $scope.createContainers = () => $location.path(UrlHelpers.join('/workspaces', $scope.namespace, 'projects', $scope.projectId, 'profiles', 'containers', 'deployProfiles'));
+
+    $scope.assignProfiles = () => $location.path(UrlHelpers.join('/workspaces', $scope.namespace, 'projects', $scope.projectId, 'profiles', 'containers', 'assignProfiles'));
+
+    $scope.deleteContainers = () => {
+      let wiki = new Wiki.GitWikiRepository($scope);
+      // TODO: use PatternFly notifications
+      let success = (response, container) => {
+        Wiki.onComplete(response);
+        Core.notification('success', container + ' deleted!');
+        complete();
+      };
+      let failure = response => {
+        Core.notification('error', response);
+        complete();
+      };
+      let complete = () => {
+        if (--saving === 0) {
+          blockTable.message('Refreshing ...');
+          containers.load(wiki, $scope.branch).then(() => {
+            blockTable.stop();
+            $location.path(UrlHelpers.join('/workspaces', $scope.namespace, 'projects', $scope.projectId, 'profiles', 'containers'));
+          });
+        }
+      };
+      blockTable.start("Saving ...");
+      containers.cart.forEach(container => {
+        saving++;
+        wiki.removePage($scope.branch, container.path, 'Delete container', (response) => success(response, container.name)/*, failure*/);
+      });
+    };
+
     $scope.loading = () => containers.loading;
     $scope.refresh = () => containers.load(new Wiki.GitWikiRepository($scope), $scope.branch, $scope.namespace);
   }])

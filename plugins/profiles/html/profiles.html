@@ -55,10 +55,14 @@
             </div>
             <ul class="plain-list">
               <li class="inline-block" ng-repeat="profile in selection">
-                <button type="button" class="btn btn-success btn-xs"
-                        ng-click="toggleSelectionFromGroup(selection, profile)">
-                  {{profile.id}} <i class="glyphicon glyphicon-remove" aria-hidden="true"></i>
-                </button><small><i ng-if="!$last" class="fa fa-plus text-success"></i></small>
+                <span type="button" class="btn btn-default btn-xs">
+                  <span type="button" class="close" aria-label="Close" ng-click="toggleSelectionFromGroup(selection, profile)"><span aria-hidden="true">&times;</span>
+                  </span>
+                  <span>
+                    {{profile.id}}
+                  </span>
+                </span>
+                <small><i ng-if="!$last" class="fa fa-plus text-muted"></i></small>
               </li>
             </ul>
             <div class="pull-right">

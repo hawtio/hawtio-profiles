@@ -58,6 +58,12 @@
                 <span type="button" style="max-width: 100%" class="btn btn-default btn-xs ellipsis">
                   <span type="button" class="close" aria-label="Close" ng-click="toggleSelectionFromGroup(selection, profile)"><span aria-hidden="true">&times;</span>
                   </span>
+                  <img ng-if="profile.iconUrl" width="16px" height="16px"
+                       class="profile-logo" style="max-width: 16px; max-height: 16px"
+                       http-src="{{gitRestUrl(profile.iconUrl)}}" media-type="image/svg+xml" />
+                  <img ng-if="!profile.iconUrl" width="16px" height="16px"
+                       class="profile-logo" style="max-width: 16px; max-height: 16px"
+                       src="img/fabric8_icon.svg" />
                   <span>
                     {{profile.id}}
                   </span>

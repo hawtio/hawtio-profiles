@@ -63,6 +63,7 @@
                   </span>
                 </span>
                 <small><i ng-if="!$last" class="fa fa-plus text-muted"></i></small>
+                <span ng-if="$last" type="button" class="glyphicon glyphicon-trash text-muted" ng-click="selection.length = 0" aria-hidden="true"></span>
               </li>
             </ul>
             <div class="pull-right">

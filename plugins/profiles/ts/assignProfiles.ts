@@ -13,6 +13,7 @@ module Profiles {
     $scope.profiles = profiles;
     $scope.containers = containers;
     $scope.selectable = true;
+    $scope.profileGroups = (profile: Profile) => profile.tags.length > 0 ? profile.tags[0] : '';
 
     let saving:number = 0;
     $scope.saving = () => saving > 0;

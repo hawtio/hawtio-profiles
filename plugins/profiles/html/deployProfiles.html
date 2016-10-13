@@ -22,7 +22,7 @@
                      src="img/fabric8_icon.svg" />
                 {{$item.id}}
               </ui-select-match>
-              <ui-select-choices repeat="profile in (profiles.data | filter: $select.search) track by profile.id">
+              <ui-select-choices group-by="profileGroups" repeat="profile in (profiles.data | filter: $select.search) track by profile.id">
                 <img ng-if="profile.iconUrl"
                      class="profile-logo" style="max-width: 32px; max-height: 32px"
                      http-src="{{gitRestUrl(profile.iconUrl)}}" media-type="image/svg+xml" />

@@ -16,6 +16,7 @@
               <ui-select-match placeholder="Select profiles...">
                 <img ng-if="$item.iconUrl" width="16px" height="16px"
                      class="profile-logo" style="max-width: 16px; max-height: 16px"
+                     src="img/loader.svg"
                      http-src="{{gitRestUrl($item.iconUrl)}}" media-type="image/svg+xml" />
                 <img ng-if="!$item.iconUrl" width="16px" height="16px"
                      class="profile-logo" style="max-width: 16px; max-height: 16px"
@@ -25,6 +26,7 @@
               <ui-select-choices group-by="profileGroups" repeat="profile in (profiles.data | filter: $select.search) track by profile.id">
                 <img ng-if="profile.iconUrl"
                      class="profile-logo" style="max-width: 32px; max-height: 32px"
+                     src="img/loader.svg"
                      http-src="{{gitRestUrl(profile.iconUrl)}}" media-type="image/svg+xml" />
                 <img ng-if="!profile.iconUrl"
                      class="profile-logo" style="max-width: 32px; max-height: 32px"

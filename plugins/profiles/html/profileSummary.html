@@ -4,7 +4,7 @@
     <!-- ideally angular-img-http-src would reuse the same BLOB for the same URLs though
          it seems it creates a new one each time -->
     <!-- TODO: use the fileExtensionTypeRegistry service to retrieve the MIME type -->
-    <img class="profile-logo" ng-if="profile.iconUrl" http-src="{{gitRestUrl(profile.iconUrl)}}" media-type="image/svg+xml" />
+    <img class="profile-logo" ng-if="profile.iconUrl" src="img/loader.svg" http-src="{{gitRestUrl(profile.iconUrl)}}" media-type="image/svg+xml" />
     <img class="profile-logo" ng-if="!profile.iconUrl" src="img/fabric8_icon.svg" />
   </div>
 

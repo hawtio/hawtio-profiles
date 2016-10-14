@@ -164,8 +164,7 @@ module Profiles {
             // Get the image URL for the Forge REST API
             let src = gitRestUrl($scope, uri.normalize().toString());
             // and use URL.createObjectURL via angular-img-http-src to get an URL for the image BLOB
-            // TODO: display a spinner while the image is loading
-            return '<img http-src="' + src + '" alt="' + (title ? title : text) + '" />';
+            return '<img src="img/loader.svg" http-src="' + src + '" alt="' + (title ? title : text) + '" />';
           } else {
             // Simply return the img tag with the original location
             return '<img src="' + href + '" alt="' + (title ? title : text) + '" />';

@@ -2,5 +2,4 @@
 declare module Profiles {
     function createProfilesSubNavBars(namespace: string, projectId: string): any;
     function parseProperties(content: string): any;
-    function gitRestUrl($scope: any, path: string, branch?: string): string;
 }

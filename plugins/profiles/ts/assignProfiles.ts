@@ -8,7 +8,7 @@ module Profiles {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
     // Associate this controller scope to the ForgeProjectService
     Forge.updateForgeProject($scope);
-    $scope.gitRestUrl = path => gitRestUrl($scope, path);
+    $scope.gitRestUrl = path => Wiki.gitRestURL($scope, path);
 
     $scope.profiles = profiles;
     $scope.containers = containers;

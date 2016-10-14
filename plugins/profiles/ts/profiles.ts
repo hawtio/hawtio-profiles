@@ -134,7 +134,7 @@ module Profiles {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
     // Associate this controller scope to the ForgeProjectService
     Forge.updateForgeProject($scope);
-    $scope.gitRestUrl = path => gitRestUrl($scope, path);
+    $scope.gitRestUrl = path => Wiki.gitRestURL($scope, path);
 
     $scope.profiles = profiles.data;
     $scope.selection = profiles.cart;
@@ -162,7 +162,7 @@ module Profiles {
               uri = uri.absoluteTo(UrlHelpers.join(profile.path, '/'));
             }
             // Get the image URL for the Forge REST API
-            let src = gitRestUrl($scope, uri.normalize().toString());
+            let src = Wiki.gitRestURL($scope, uri.normalize().toString());
             // and use URL.createObjectURL via angular-img-http-src to get an URL for the image BLOB
             return '<img src="img/loader.svg" http-src="' + src + '" alt="' + (title ? title : text) + '" />';
           } else {

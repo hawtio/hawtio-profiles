@@ -4,11 +4,11 @@
     <div template-cache-include="plugins/kubernetes/html/tabs.html"></div>
   </div>
 
-  <button class="btn btn-primary pull-right" ng-disabled="loading()" ng-click="refresh()">
-    <i class="fa fa-refresh" ng-class="{'fa-spin': loading()}"></i> Refresh
+  <button class="btn btn-primary pull-right" ng-disabled="containers.loading" ng-click="refresh()">
+    <i class="fa fa-refresh" ng-class="{'fa-spin': containers.loading}"></i> Refresh
   </button>
 
-  <h2>Containers <i ng-show="loading()" class="fa fa-refresh fa-spin"></i> <span class="badge" ng-show="containers.data.length > 0">{{containers.length}}</span></h2>
+  <h2>Containers <i ng-show="containers.loading" class="fa fa-refresh fa-spin"></i> <span class="badge" ng-show="containers.data.length > 0">{{containers.length}}</span></h2>
 
   <div class="row" block-ui="blockTable">
     <div ng-include="'plugins/profiles/html/containerList.html'"></div>
@@ -17,21 +17,21 @@
   <div class="row pull-right">
     <button class="btn btn-link"
             type="button"
-            ng-disabled="loading() || saving()"
+            ng-disabled="containers.loading || saving()"
             ng-click="createContainers()"
             title="Create new container(s) from a set of profiles">
       Create <i class="fa fa-cubes"></i>
     </button>
     <button class="btn btn-link"
             type="button"
-            ng-disabled="!containers.cart.length || loading() || saving()"
+            ng-disabled="!containers.cart.length || containers.loading || saving()"
             ng-click="assignProfiles()"
             title="Modify the selected container(s) by changing the set of profiles">
       Assign profiles <i class="fa fa-magic"></i>
     </button>
     <button class="btn btn-danger"
             type="button"
-            ng-disabled="!containers.cart.length || loading() || saving()"
+            ng-disabled="!containers.cart.length || containers.loading || saving()"
             ng-click="deleteContainers()"
             title="Delete the selected container(s)">
       Delete <i class="fa fa-times-circle"></i>

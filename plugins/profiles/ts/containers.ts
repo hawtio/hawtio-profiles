@@ -157,7 +157,6 @@ module Profiles {
       });
     };
 
-    $scope.loading = () => containers.loading;
     $scope.refresh = () => containers.load(new Wiki.GitWikiRepository($scope), $scope.branch, $scope.namespace);
   }])
 }

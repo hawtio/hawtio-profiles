@@ -1,131 +1,73 @@
-body {
-  padding-top: inherit;
-}
-.breadcrumb {
-  /* overwrite the bottom padding from pf's breadcrumb class */
-  margin-bottom: 0;
-}
-.wiki-icon-view {
-  border-radius: 0;
-  border: none;
-}
-.kubernetes-view .row.filter-header {
-  margin-top: 1em;
-}
-.pending-pods .ngCellText {
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
-.commit-message {
-  margin-left: 0.5em;
-  margin-bottom: 1em;
-  font-weight: bold;
-}
-.commit-date {
-  margin-right: 1em;
-}
-.commit-author {
-  margin-right: 0.5em;
-}
-.change-add {
-  color: #006400;
-}
-.change-delete {
-  color: darkred;
-}
-.change-modify {
-  color: darkslateblue;
-}
-.folder-icon {
-  color: burlywood;
-}
-.wiki-fixed {
-  margin-top: inherit;
-}
-.small-cards .card {
-  width: 140px;
-  height: 140px;
-}
-
-.navbar.navbar-pf-vertical {
-  height: 48px;
-  max-height: 48px;
-  line-height: 48px;
+ul.plain-list {
   padding: 0;
-  margin: 0;
 }
-.navbar.navbar-pf-vertical .navbar-header {
-  height: 100%;
+.plain-list > li {
+  list-style-type: none;
 }
-.navbar.navbar-pf-vertical .navbar-header > .navbar-toggle {
-  display: none;
-}
-.navbar.navbar-pf-vertical .navbar-header > .fabric8.navbar-brand {
-  height: 100%;
-  margin-left: 12px;
-  padding-top: 12px;
-  padding-bottom: 12px;
-}
-.navbar.navbar-pf-vertical .navbar-header > .fabric8.navbar-brand .navbar-brand-icon {
+.plain-list img {
   height: 20px;
 }
-.navbar.navbar-pf-vertical .fabric8.collapse.navbar-collapse {
-  height: auto !important;
-  padding: 0;
+li.inline-block {
+  margin: 1px;
 }
-.navbar.navbar-pf-vertical .fabric8.collapse.navbar-collapse .nav.navbar-nav.nav-breadcrumb {
-  display: inline-block;
-  height: 48px;
-  line-height: 48px;
+li.inline-block button,
+li.inline-block span {
+  margin-left: 2px;
 }
-.navbar.navbar-pf-vertical .fabric8.collapse.navbar-collapse .nav.navbar-nav.nav-breadcrumb .breadcrumb {
-  height: 48px;
-  padding: 0;
-  display: inline-block;
+
+.badge-success {
+  background-color: #468847;
 }
-.navbar.navbar-pf-vertical .fabric8.collapse.navbar-collapse .nav.navbar-nav.nav-breadcrumb .breadcrumb > li {
-  display: inline-block;
-  height: 100%;
+
+.panel-title > a:before {
+  content: none !important;
 }
-.navbar.navbar-pf-vertical .fabric8.collapse.navbar-collapse .nav.navbar-nav.nav-breadcrumb .breadcrumb > li a,
-.navbar.navbar-pf-vertical .fabric8.collapse.navbar-collapse .nav.navbar-nav.nav-breadcrumb .breadcrumb > li span {
-  display: inline-block;
-  height: auto;
-  font-size: 14px;
-  font-weight: 600;
-  color: #dbdada;
-  vertical-align: baseline;
+.panel-default > .panel-heading .badge {
+  color: #ffffff;
+  background-color: #999999;
 }
-.navbar.navbar-pf-vertical .fabric8.collapse.navbar-collapse .nav.navbar-nav.nav-breadcrumb .breadcrumb > li > a:hover {
-  text-decoration: none;
+.panel-default > .panel-heading .badge-success {
+  background-color: #468847;
 }
-.navbar.navbar-pf-vertical .fabric8.collapse.navbar-collapse .nav.navbar-nav.nav-breadcrumb .breadcrumb > li.ng-hide:after {
-  display: none;
+.panel-group .panel-title {
+  line-height: 1.3;
 }
-.navbar.navbar-pf-vertical .fabric8.collapse.navbar-collapse .nav.navbar-nav.nav-breadcrumb .breadcrumb > li + li:before {
-  display: none;
-}
-.navbar.navbar-pf-vertical .fabric8.collapse.navbar-collapse .nav.navbar-nav.nav-breadcrumb .breadcrumb > li:after,
-.navbar.navbar-pf-vertical .fabric8.collapse.navbar-collapse .nav.navbar-nav.nav-breadcrumb .breadcrumb > li:first-child:before {
-  vertical-align: middle;
+.panel-heading .pull-left .glyphicon {
   margin-right: 10px;
-  margin-left: -15px;
-  border-right: 0.5px solid #4a4a4a;
-  border-top-right-radius: 32px;
-  border-bottom-right-radius: 32px;
-  content: "";
-  display: inline-block;
-  height: 100%;
-  width: 30px;
-  padding: 0;
 }
-.navbar.navbar-pf-vertical .fabric8.collapse.navbar-collapse .nav.navbar-nav.navbar-right.navbar-iconic .nav-item-iconic {
-  padding-top: 15px;
-  padding-bottom: 15px;
+.panel-heading .pull-right input {
+  margin-left: 10px;
 }
-.nav-pf-vertical {
-  top: 50px;
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.nav-pf-vertical .list-group li:first-child {
-  border-top: none;
+input.search-input {
+  border-style: none;
+  border-bottom-style: inset;
+  margin: 0;
+  min-width: 0;
+}
+input.search-input.has-text {
+  background-color: inherit;
+}
+.profile-logo > svg,
+img.profile-logo {
+  display: inline;
+  max-width: 64px;
+  max-height: 64px;
+}
+div.profile-summary {
+  overflow-x: scroll;
+  word-wrap: break-word;
+}
+.tag-filter li {
+  max-width: 100%;
+}
+.tag-filter span.badge {
+  max-width: 80%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

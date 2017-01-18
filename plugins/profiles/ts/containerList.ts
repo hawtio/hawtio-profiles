@@ -61,8 +61,8 @@ module Profiles {
     });
 
     $scope.$on('kubernetesModelUpdated', () =>
-      _.filter(containers.data, (container:Container) => !container.rc)
-        .forEach((container:Container) => container.rc = kubernetes.getReplicationController($scope.namespace || Kubernetes.currentKubernetesNamespace(), container.name)));
+      _.filter(containers.data, (container:Container) => !container.deployment)
+        .forEach((container:Container) => container.deployment = kubernetes.getDeployment($scope.namespace || Kubernetes.currentKubernetesNamespace(), container.name)));
 
     if (!(containers.loaded || containers.loading)) {
       $scope.refresh();

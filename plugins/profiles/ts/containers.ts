@@ -24,7 +24,7 @@ module Profiles {
     name:     string;
     path:     string;
     text?:    string;
-    rc?:      any;
+    deployment?: any;
     profiles: (Profile|string)[];
     types:    string[];
     icons?:   Icon[];
@@ -58,12 +58,13 @@ module Profiles {
             this.requests++;
             wiki.getPage(branch, child.path, null, page => {
               let properties = parseProperties(page.text);
+              const name = page.name.replace(/.cfg$/, '');
               let container = <Container> {
-                name: page.name.replace(/.cfg$/, ''),
+                name: name,
                 path: page.path,
                 text: page.text,
-                // TODO: implement a more robust mapping between the container project and the corresponding RC
-                rc: this.kubernetes.getReplicationController(namespace || Kubernetes.currentKubernetesNamespace(), page.name.replace(/.cfg$/, '')),
+                // TODO: implement a more robust mapping between the container project and the corresponding deployment using the group and project labels
+                deployment: this.kubernetes.getDeployment(namespace || Kubernetes.currentKubernetesNamespace(),name),
                 // We could load the profiles if not already loaded and sync the containers data if needed
                 profiles: _.map(properties['profiles'].split(' '), (profile:string) => <Profile|string>_.find(this.profiles.data, {id: profile}) || profile),
                 types: properties['container-type'].split(' '),
@@ -73,19 +74,13 @@ module Profiles {
                   src: 'img/icons/' + (type.toLowerCase() in icons ? icons[type.toLowerCase()] : 'java') + '.svg'
                 })
               };
-              // Override the icons with runtime container info
-              if (container.rc) {
-                let type = container.rc.metadata.labels.container.toLocaleLowerCase();
-                container.icons = [
-                <Icon> {
-                  title: type,
+
+              // add the icons from the runtime info
+              if (container.deployment) {
+                container.icons.push(<Icon> {
                   type: 'img',
-                  src: 'img/icons/' + (type in icons ? icons[type] : 'java') + '.svg'
-                },
-                <Icon> {
-                  type: 'img',
-                  src: container.rc.$iconUrl
-                }];
+                  src : container.deployment.$iconUrl
+                });
               }
               data.push(container);
               this.complete(data);

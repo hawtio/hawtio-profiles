@@ -13,7 +13,7 @@ declare module Profiles {
         name: string;
         path: string;
         text?: string;
-        rc?: any;
+        deployment?: any;
         profiles: (Profile | string)[];
         types: string[];
         icons?: Icon[];

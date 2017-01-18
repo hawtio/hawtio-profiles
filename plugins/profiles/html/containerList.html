@@ -8,19 +8,19 @@
 
 <script type="text/ng-template" id="containerName.html">
   <div class="ngCellText nowrap">
-    <a ng-if="row.entity.rc" href="" title="View details for {{row.entity.name}}"
-       ng-href="{{row.entity.rc | kubernetesPageLink}}">
+    <a ng-if="row.entity.deployment" href="" title="View details for {{row.entity.name}}"
+       ng-href="{{row.entity.deployment | kubernetesPageLink}}">
       {{row.entity.name}}
     </a>
-    <span ng-if="!row.entity.rc">{{row.entity.name}}</span>
+    <span ng-if="!row.entity.deployment">{{row.entity.name}}</span>
   </div>
 </script>
 
 <script type="text/ng-template" id="containerPods.html">
   <div class="ngCellText nowrap">
-    <i ng-if="!row.entity.rc || row.entity.rc.$pods.length === 0" class="fa fa-power-off"></i>
+    <i ng-if="!row.entity.deployment || row.entity.deployment.$pods.length === 0" class="fa fa-power-off"></i>
     <ul class="plain-list">
-      <li ng-repeat="pod in row.entity.rc.$pods">
+      <li ng-repeat="pod in row.entity.deployment.$pods">
         <i ng-class="pod.$statusCss"></i>
         <a href="" title="View details for {{pod.metadata.name}}"
            ng-href="{{pod | kubernetesPageLink}}">

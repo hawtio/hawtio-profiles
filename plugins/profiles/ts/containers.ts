@@ -23,7 +23,6 @@ module Profiles {
   export interface Container {
     name:     string;
     path:     string;
-    text?:    string;
     deployment?: any;
     profiles: (Profile|string)[];
     types:    string[];
@@ -31,19 +30,21 @@ module Profiles {
   }
 
   export class Containers {
-    loaded:boolean = false;
-    loading:boolean = false;
+    loaded: boolean          = false;
+    loading: boolean         = false;
     private requests: number = 0;
-    data:Container[] = [];
-    cart:Container[] = [];
-    private profiles:Profiles;
-    private kubernetes:KubernetesModelService;
-    private $q:ng.IQService;
+    data: Container[]        = [];
+    cart: Container[]        = [];
+    private profiles: Profiles;
+    private kubernetes: KubernetesModelService;
+    private $q: ng.IQService;
+    private yaml;
 
-    constructor(profiles: Profiles, kubernetes: KubernetesModelService, $q: ng.IQService) {
-      this.profiles = profiles;
+    constructor(profiles: Profiles, kubernetes: KubernetesModelService, $q: ng.IQService, yaml) {
+      this.profiles   = profiles;
       this.kubernetes = kubernetes;
-      this.$q = $q;
+      this.$q         = $q;
+      this.yaml       = yaml;
     }
 
     load = (wiki:Wiki.GitWikiRepository, branch:string, namespace?:string):IPromise<void> => {
@@ -54,21 +55,20 @@ module Profiles {
       // Lets list all the containers, and load the container configs
       wiki.getPage(branch, 'configs/containers', null, page => {
         _.forEach(page.children, child => {
-          if (!child.directory && _.endsWith(child.name, '.cfg')) {
+          if (!child.directory && _.endsWith(child.name, '.yaml')) {
             this.requests++;
             wiki.getPage(branch, child.path, null, page => {
-              let properties = parseProperties(page.text);
-              const name = page.name.replace(/.cfg$/, '');
+              let properties = this.yaml.safeLoad(page.text);
+              const name = page.name.replace(/.yaml/, '');
               let container = <Container> {
                 name: name,
                 path: page.path,
-                text: page.text,
                 // TODO: implement a more robust mapping between the container project and the corresponding deployment using the group and project labels
                 deployment: this.kubernetes.getDeployment(namespace || Kubernetes.currentKubernetesNamespace(),name),
                 // We could load the profiles if not already loaded and sync the containers data if needed
-                profiles: _.map(properties['profiles'].split(' '), (profile:string) => <Profile|string>_.find(this.profiles.data, {id: profile}) || profile),
-                types: properties['container-type'].split(' '),
-                icons: properties['container-type'].split(' ').map(type => <Icon> {
+                profiles: _.map(properties.container.profiles.split(' '), (profile:string) => <Profile|string>_.find(this.profiles.data, {id: profile}) || profile),
+                types: properties.container['container-type'].split(' '),
+                icons: properties.container['container-type'].split(' ').map(type => <Icon> {
                   title: type,
                   type: 'img',
                   src: 'img/icons/' + (type.toLowerCase() in icons ? icons[type.toLowerCase()] : 'java') + '.svg'
@@ -103,7 +103,7 @@ module Profiles {
     };
   }
 
-  module.service('containers', ['profiles', 'KubernetesModel', '$q', Containers]);
+  module.service('containers', ['profiles', 'KubernetesModel', '$q', 'jsyaml', Containers]);
 
   module.controller('Profiles.ContainersController',
     ['$scope', '$location', 'containers', 'blockUI',

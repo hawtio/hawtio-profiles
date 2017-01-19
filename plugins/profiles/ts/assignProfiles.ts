@@ -4,7 +4,7 @@
 
 module Profiles {
 
-  module.controller('Profiles.AssignProfilesController', ['$scope', '$location', '$templateCache', 'profiles', 'containers', 'blockUI', ($scope, $location, $templateCache, profiles: Profiles, containers: Containers, blockUI) => {
+  module.controller('Profiles.AssignProfilesController', ['$scope', '$location', '$templateCache', 'profiles', 'containers', 'blockUI', 'jsyaml', ($scope, $location, $templateCache, profiles: Profiles, containers: Containers, blockUI, yaml) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
     // Associate this controller scope to the ForgeProjectService
     Forge.updateForgeProject($scope);
@@ -48,9 +48,12 @@ module Profiles {
       });
     };
 
-    let assignProfiles = (container: Container, profiles: Profile[]):string =>
-        container.text.replace(/^(profiles)=(.*)$/m,
-            (match, key, value) => key + '=' + profiles.map(profile => profile.id).join(' '));
+    let assignProfiles = (container: Container, profiles: Profile[]): string => yaml.safeDump({
+      container: {
+        profiles        : profiles.map(profile => profile.id).join(' '),
+        'container-type': container.types.join(' ')
+      }
+    });
 
     $scope.refreshContainers = () => containers.load(new Wiki.GitWikiRepository($scope), $scope.branch);
     $scope.refreshProfiles = () => {

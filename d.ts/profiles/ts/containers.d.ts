@@ -12,7 +12,6 @@ declare module Profiles {
     interface Container {
         name: string;
         path: string;
-        text?: string;
         deployment?: any;
         profiles: (Profile | string)[];
         types: string[];
@@ -27,7 +26,8 @@ declare module Profiles {
         private profiles;
         private kubernetes;
         private $q;
-        constructor(profiles: Profiles, kubernetes: KubernetesModelService, $q: ng.IQService);
+        private yaml;
+        constructor(profiles: Profiles, kubernetes: KubernetesModelService, $q: ng.IQService, yaml: any);
         load: (wiki: Wiki.GitWikiRepository, branch: string, namespace?: string) => IPromise<void>;
         private complete;
     }

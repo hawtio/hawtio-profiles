@@ -4,7 +4,7 @@
 
 module Profiles {
 
-  module.controller('Profiles.DeployProfilesController', ['$scope', '$location', '$templateCache', 'profiles', 'containers', 'blockUI', ($scope, $location, $templateCache, profiles: Profiles, containers: Containers, blockUI) => {
+  module.controller('Profiles.DeployProfilesController', ['$scope', '$location', '$templateCache', 'profiles', 'containers', 'blockUI', 'jsyaml', ($scope, $location, $templateCache, profiles: Profiles, containers: Containers, blockUI, yaml) => {
     $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
     // Associate this controller scope to the ForgeProjectService
     Forge.updateForgeProject($scope);
@@ -47,13 +47,15 @@ module Profiles {
       blockTable.start("Saving ...");
       saving++;
       $scope.select.names.forEach(name =>
-        wiki.putPage($scope.branch, 'configs/containers/' + name + '.cfg', deployProfiles(name, profiles.cart), 'Deploy profiles into ' + name, success, failure));
+        wiki.putPage($scope.branch, 'configs/containers/' + name + '.yaml', deployProfiles(name, profiles.cart), 'Deploy profiles into ' + name, success, failure));
     };
 
-    let deployProfiles = (container: string, profiles: Profile[]):string =>
-        profiles.reduce((profiles: string, profile: Profile) => profiles + profile.id + ' ', 'profiles=')
-          .concat('\n')
-          .concat('container-type=karaf jenkinsfile');
+    let deployProfiles = (container: string, profiles: Profile[]): string => yaml.safeDump({
+      container: {
+        profiles        : profiles.map(profile => profile.id).join(' '),
+        'container-type': 'karaf jenkinsfile'
+      }
+    });
 
     $scope.existingContainers = names => _.intersection(names, _.pluck(containers.data, 'name'));
 

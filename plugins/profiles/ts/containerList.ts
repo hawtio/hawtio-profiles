@@ -62,7 +62,13 @@ module Profiles {
 
     $scope.$on('kubernetesModelUpdated', () =>
       _.filter(containers.data, (container:Container) => !container.deployment)
-        .forEach((container:Container) => container.deployment = kubernetes.getDeployment($scope.namespace || Kubernetes.currentKubernetesNamespace(), container.name)));
+        .forEach((container:Container) => {
+          container.deployment = kubernetes.getDeployment($scope.namespace || Kubernetes.currentKubernetesNamespace(), container.name);
+          container.icons.push(<Icon> {
+            type: 'img',
+            src : container.deployment.$iconUrl
+          });
+    }));
 
     if (!(containers.loaded || containers.loading)) {
       $scope.refresh();

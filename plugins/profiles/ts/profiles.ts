@@ -123,6 +123,9 @@ module Profiles {
   module.service('profiles', Profiles);
   module.service('profileViews', ProfileViews);
 
+  // Expose js-yaml as constant for injection
+  module.constant('jsyaml', jsyaml);
+
   module.filter('filterCollection', () => (collection, text) =>
     Core.isBlank(text)
       ? collection

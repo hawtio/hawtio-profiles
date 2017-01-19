@@ -4,12 +4,12 @@
 
 module Profiles {
 
-  module.controller('Profiles.SettingsController', ['$scope', ($scope) => {
+  module.controller('Profiles.SettingsController', ['$scope', 'jsyaml', ($scope, yaml) => {
       $scope.tabs = createProfilesSubNavBars($scope.namespace, $scope.projectId);
       // Associate this controller scope to the ForgeProjectService
       Forge.updateForgeProject($scope);
 
-      var wikiRepository = new Wiki.GitWikiRepository($scope);
+      const wikiRepository = new Wiki.GitWikiRepository($scope);
   
       // We use $scope.loading to reference count loading operations so that we know when all the data
       // for this view has been fetched.
@@ -19,20 +19,20 @@ module Profiles {
         style: HawtioForms.FormStyle.STANDARD,
         mode: HawtioForms.FormMode.VIEW,
         properties: {
-          gitRemoteUriPattern: {
+          'git.gitRemoteUriPattern': {
             type: 'string',
             description: 'Git remote URI pattern for all containers, name is the name of the container, e.g. root'
           },
-          gogsUsername: {
+          'git.gogsUsername': {
               type: 'string'
           },
-          gogsPassword: {
+          'git.gogsPassword': {
               type: 'password'
           },
-          groupId: {
+          'maven.groupId': {
               type: 'string'
           },
-          version: {
+          'maven.version': {
               type: 'string'
           }
         }
@@ -40,10 +40,10 @@ module Profiles {
 
       $scope.refresh = () => {
         $scope.loading++;
-        wikiRepository.getPage($scope.branch, 'fabric8-profiles.cfg', null, data => {
+        wikiRepository.getPage($scope.branch, 'fabric8-profiles.yaml', null, data => {
           $scope.loading--;
           $scope.settings = data.text;
-          $scope.properties = parseProperties(data.text);
+          $scope.properties = yaml.safeLoad(data.text);
         });
       };
 
@@ -52,11 +52,12 @@ module Profiles {
         : HawtioForms.FormMode.EDIT);
 
       $scope.save = () => {
-        var edit = apply($scope.properties, $scope.settings);
+        // that should ideally preserve comments in the existing file
+        const edit = yaml.safeDump($scope.properties);
         if (edit != $scope.settings) {
           $scope.loading++;
           // TODO: use PatternFly notifications
-          wikiRepository.putPage($scope.branch, 'fabric8-profiles.cfg', edit, 'Update profiles settings',
+          wikiRepository.putPage($scope.branch, 'fabric8-profiles.yaml', edit, 'Update profiles settings',
             response => {
               Wiki.onComplete(response);
               Core.notification('success', response.file + ' saved!');
@@ -69,9 +70,6 @@ module Profiles {
           );
         }
       };
-
-      let apply = (properties:any, settings:string):string =>
-        settings.replace(/^([^#=]+)=(.*)$/gm, (match, key, value) => key + '=' + properties[key] || value);
 
       $scope.refresh();
     }
